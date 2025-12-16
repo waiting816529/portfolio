@@ -1,0 +1,18 @@
+# IDE and environment files
+.devcontainer/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+
+# Database
+db.sqlite3
+
+# Environment variables
+.env
