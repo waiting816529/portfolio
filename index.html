@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0284c7">
+    <title>陳薇婷Waiting｜EdTech專家</title>
+    <meta property="og:title" content="陳薇婷Waiting｜EdTech專家">
+    <!-- Favicon: inline SVG (brand 'W') to be visible in browser tabs -->
+    <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%230284c7'/><text x='50%' y='50%' font-family='Outfit, Arial, Helvetica, sans-serif' font-size='36' fill='white' text-anchor='middle' dominant-baseline='central'>W</text></svg>">
+    <meta property="og:description" content="具 Gen-AI 實戰經驗與數位教材開發能力的教育訓練專家。">
+    <!-- Use repository avatar for social/link previews when possible -->
+    <meta property="og:image" content="https://waiting816529.github.io/portfolio/portrait.jpg?v=1.0">
+    
+    <!-- Tailwind CSS (CDN for prototyping, recommend build step for production) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Marked.js for Markdown rendering (Added for stability) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        // 定義配置物件
+        const portfolioConfig = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        heading: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#0ea5e9', // Sky Blue
+                            600: '#0284c7', // Darker Blue
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        tech: {
+                            dark: '#0f172a', // Slate 900
+                            gray: '#64748b', // Slate 500
+                        }
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(14, 165, 233, 0.15)',
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        };
+
+        // 安全載入 Tailwind 設定
+        tailwind.config = portfolioConfig;
+    </script>
+
+    <style>
+        /* Global Styles */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(to right, #38bdf8, #0284c7);
+            z-index: 100;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Anchor offset so fixed navbar doesn't cover target */
+        #lets-connect {
+            scroll-margin-top: 5rem; /* equals height of .h-20 navbar */
+        }
+
+        /* Glassmorphism Navigation */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        /* Timeline Styles */
+        .timeline-line {
+            position: absolute;
+            left: 20px; 
+            top: 20px;
+            bottom: 20px;
+            width: 2px;
+            background: linear-gradient(to bottom, #e2e8f0 0%, #cbd5e1 50%, #e2e8f0 100%);
+            z-index: 0;
+        }
+
+        /* STAR Badges - Centered */
+        .star-tag {
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 6px; 
+            min-width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            margin-right: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .star-s { background: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; } /* Situation */
+        .star-t { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; } /* Task */
+        .star-a { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; } /* Action */
+        .star-r { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; } /* Result */
+
+        /* Final Fix: Ensure number highlight uses only safe inline properties */
+        .num-highlight {
+            font-weight: 900; 
+            color: #0284c7; 
+        }
+
+        /* Mode Switcher Styles */
+        .mode-button {
+            transition: all 0.2s;
+            padding: 8px 24px;
+            font-weight: 600;
+            border: 1px solid #0284c7;
+            cursor: pointer;
+        }
+        .mode-button.active {
+            background-color: #0284c7; /* brand-600 */
+            color: white;
+            box-shadow: 0 4px 6px rgba(2, 132, 199, 0.2);
+        }
+        .mode-button:hover:not(.active) {
+            background-color: #f0f9ff; /* brand-50 */
+        }
+
+        /* Mode switcher indicator and micro animations */
+        .mode-switcher { display: inline-flex; align-items: center; }
+        #mode-indicator { z-index: 0; }
+        .mode-switcher .mode-button { z-index: 10; }
+        .mode-switcher .mode-button.active { background-color: transparent; color: #0369a1; box-shadow: none; }
+
+        @keyframes pulse-quick {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .pulse { animation: pulse-quick 420ms ease-in-out; }
+
+        /* Entry animation for job items when switching modes */
+        .job-item.enter { opacity: 0; transform: translateY(10px) scale(0.995); }
+        .job-item.enter-active { transition: all 360ms cubic-bezier(0.22, 1, 0.36, 1); opacity: 1; transform: translateY(0) scale(1); }
+
+        /* CTA pulse for Let's Connect */
+        @keyframes cta-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(2,132,199,0.25); transform: translateY(0); }
+            65% { box-shadow: 0 0 20px 6px rgba(2,132,199,0.08); transform: translateY(-3px); }
+            100% { box-shadow: 0 0 0 0 rgba(2,132,199,0); transform: translateY(0); }
+        }
+        .cta-pulse { animation: cta-pulse 1200ms ease-out; }
+
+        /* Hero name pop */
+        @keyframes hero-pop { from { opacity: 0; transform: translateY(6px) scale(0.995); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .hero-pop { animation: hero-pop 560ms cubic-bezier(0.2,0.8,0.2,1) both; }
+
+        /* Job item bounce when activated */
+        @keyframes job-bounce { 0% { transform: translateX(0); } 30% { transform: translateX(6px); } 100% { transform: translateX(0); } }
+        .job-bounce { animation: job-bounce 420ms cubic-bezier(0.2,1,0.3,1); }
+
+        /* Skill badge hover glow */
+        .skill-badge { transition: transform .18s ease, box-shadow .18s ease; }
+        .skill-badge:hover, .skill-badge:focus { transform: translateY(-4px) scale(1.03); box-shadow: 0 10px 20px rgba(2,132,199,0.06); }
+
+        /* Focus-visible helpers */
+        a:focus-visible, button:focus-visible { outline: 3px solid rgba(2,132,199,0.18); outline-offset: 3px; }
+
+        /* Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .cta-pulse, .pulse, .hero-pop, .job-bounce, .enter-active, .animate-fade-in { animation: none !important; transition: none !important; }
+        }
+
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Project Hover Overlay */
+        .project-card .overlay {
+            opacity: 0;
+            transition: all 0.4s ease;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(4px);
+        }
+        .project-card:hover .overlay {
+            opacity: 1;
+        }
+        
+        .overlay-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .overlay-scroll::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+        .overlay-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+
+        /* Chatbot Styles */
+        .chat-container {
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px) scale(0.95);
+        }
+        .chat-container.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+        .typing-indicator span {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            background-color: #94a3b8;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out both;
+            margin: 0 1px;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Chat Message Markdown Styles */
+        .prose p { margin-bottom: 0.5rem; }
+        .prose ul { list-style-type: disc; padding-left: 1.2rem; margin-bottom: 0.5rem; }
+        .prose strong { color: #0284c7; font-weight: 600; }
+
+        /* Tooltip for Skills */
+        .skill-icon:hover .skill-tooltip {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+        .skill-tooltip {
+            transform: translate(-50%, 5px);
+        }
+
+        /* Certificate Modal */
+        #cert-modal {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        /* Fade In Animation for Content */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Ensure images are responsive by default */
+        img { max-width: 100%; height: auto; }
+
+        /* Active Job Item Style */
+        .job-item {
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent; /* Replaced border-r with border-l for cleaner list logic */
+            display: block; /* Default to block for JS control */
+        }
+        .job-item.active {
+            background-color: white;
+            border-left-color: #0284c7; /* brand-600 */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .job-item .timeline-dot {
+             transition: all 0.3s ease;
+        }
+        .job-item.active .timeline-dot {
+            background-color: #0284c7; 
+            border-color: #bae6fd;
+            transform: scale(1.3);
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+        }
+        .job-item.hidden-mode {
+             display: none;
+        }
+        
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+            .timeline-line { left: 16px; }
+            .job-item { padding-left: 2.5rem; }
+            .job-item .timeline-dot { left: 10px; }
+            /* Make hero image show the top of the image on small screens (keep face visible) */
+            .hero-portrait { object-position: top center; }
+            /* Slightly taller hero on small screens so portrait is less likely to crop face */
+            .md\:w-5\/12 { min-height: 360px; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 font-sans selection:bg-brand-100 selection:text-brand-900 relative antialiased">
+
+    <!-- Scroll Progress -->
+    <div id="scroll-progress"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-nav h-20 flex items-center shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-6xl mx-auto px-4 w-full flex justify-between items-center">
+            <a href="#" class="font-heading font-bold text-2xl text-slate-800 tracking-tight flex items-center gap-2 group">
+                <span class="w-8 h-8 bg-brand-600 text-white rounded-lg flex items-center justify-center text-sm shadow-md group-hover:bg-brand-500 transition-colors">W</span>
+                WAITING
+            </a>
+            
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                <a href="#about" class="hover:text-brand-600 transition relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-600 after:transition-all hover:after:w-full">關於我</a>
+                <a href="#experience" class="hover:text-brand-600 transition relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-600 after:transition-all hover:after:w-full">工作經歷</a>
+                <a href="#activity" class="hover:text-brand-600 transition relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-600 after:transition-all hover:after:w-full">課外活動</a>
+                <a href="#lets-connect" class="hover:text-brand-600 transition relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-600 after:transition-all hover:after:w-full">與我聯繫</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-slate-600 p-2 hover:bg-slate-100 rounded focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden absolute top-20 left-0 w-full bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-xl md:hidden transition-all duration-300 origin-top transform scale-y-0 opacity-0">
+            <div class="flex flex-col p-4 space-y-4 font-medium text-slate-600 text-center">
+                <a href="#about" class="block py-2 hover:text-brand-600 hover:bg-slate-50 rounded-lg" onclick="toggleMobileMenu()">關於我</a>
+                <a href="#experience" class="block py-2 hover:text-brand-600 hover:bg-slate-50 rounded-lg" onclick="toggleMobileMenu()">工作經歷</a>
+                <a href="#activity" class="block py-2 hover:text-brand-600 hover:bg-slate-50 rounded-lg" onclick="toggleMobileMenu()">課外活動</a>
+                <a href="#lets-connect" class="block py-2 hover:text-brand-600 hover:bg-slate-50 rounded-lg" onclick="toggleMobileMenu()">與我聯繫</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <section id="about" class="pt-32 pb-20 md:py-32 relative overflow-hidden bg-slate-50 border-b border-slate-200/60">
+        <!-- Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-50 -mr-20 -mt-20 mix-blend-multiply animate-pulse-slow"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-teal-100 rounded-full blur-3xl opacity-50 -ml-20 -mb-20 mix-blend-multiply animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+        
+        <!-- Finalized Layout: Content Left, Image Right -->
+        <div class="relative z-10 max-w-5xl mx-auto px-4 reveal">
+            <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row-reverse min-h-[420px] border border-white/60 relative">
+                
+                <!-- Right Side: Image -->
+                <div class="md:w-5/12 relative min-h-[300px] md:min-h-full bg-slate-200">
+                    <!-- Placeholder image used if local file fails -->
+                    <img src="portrait.jpg"
+                        alt="Waiting Portrait"
+                        loading="lazy" decoding="async"
+                        class="absolute inset-0 w-full h-full object-cover object-center hero-portrait hover:scale-105 transition-transform duration-700 ease-out">
+                    
+                    <!-- Gradient overlay on right -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent md:bg-gradient-to-l md:from-transparent md:to-black/5"></div>
+                    
+                    <!-- Mobile Text (Hidden on Desktop) -->
+                    <div class="absolute bottom-6 right-6 text-white md:hidden text-right drop-shadow-md">
+                        <p class="font-heading font-bold text-3xl mb-1">Waiting</p>
+                        <p class="text-slate-200 text-sm tracking-wide bg-black/20 px-2 py-1 rounded inline-block backdrop-blur-sm">Training Specialist</p>
+                    </div>
+                </div>
+
+                <!-- Left Side: Content -->
+                <div class="md:w-7/12 p-6 md:p-10 flex flex-col justify-center gap-6 bg-gradient-to-br from-white to-slate-50">
+                    
+                    <!-- 1. Header -->
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex flex-wrap items-baseline gap-3 mb-3">
+                                <h1 class="text-3xl md:text-5xl font-bold text-slate-800 tracking-tight">陳薇婷</h1>
+                                <span class="text-xl text-brand-600 font-medium font-heading tracking-wide">Waiting</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 bg-brand-50 text-brand-700 rounded-md text-[11px] font-bold border border-brand-100 uppercase tracking-wide shadow-sm">#積極當責</span>
+                                <span class="px-2.5 py-1 bg-brand-50 text-brand-700 rounded-md text-[11px] font-bold border border-brand-100 uppercase tracking-wide shadow-sm">#創新思考</span>
+                                <span class="px-2.5 py-1 bg-brand-50 text-brand-700 rounded-md text-[11px] font-bold border border-brand-100 uppercase tracking-wide shadow-sm">#跨域整合</span>
+                                <span id="birth-pill" class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-md text-[11px] font-medium border border-slate-100/60 flex items-center gap-2" title="出生日期：2000.08.16" aria-label="出生日期：2000年8月16日">
+                                    <i class="fas fa-birthday-cake text-amber-500 text-sm" aria-hidden="true"></i>
+                                    <span class="text-[11px] text-slate-700">2000.08.16</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Portfolio Icons -->
+                        <div class="flex gap-2">
+                            <a href="https://youtube.com/playlist?list=PLHKsntqbB3CuqYpFCTp14n_MpAaJWVKNd&si=rYCfEK5Ar9rZy_TO" target="_blank" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-[#FF0000] hover:text-white text-slate-500 flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1" title="影音作品集 (YouTube)">
+                                <i class="fab fa-youtube text-lg"></i>
+                            </a>
+                            <a href="https://www.behance.net/65ea2072" target="_blank" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-[#1769ff] hover:text-white text-slate-500 flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1" title="設計作品集 (Behance)">
+                                <i class="fab fa-behance text-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 2. Bio -->
+                    <div class="relative pl-5 border-l-4 border-brand-400">
+                        <p class="text-slate-600 text-base leading-relaxed text-justify">
+                            具 <span class="inline bg-brand-50 text-brand-600 font-bold px-1 md:px-2 py-0.5 rounded-md">Gen-AI 實戰經驗</span> 與 <span class="inline bg-brand-50 text-brand-600 font-bold px-1 md:px-2 py-0.5 rounded-md">數位教材開發能力</span> 的教育訓練專家。<br class="hidden md:block">
+                            結合關鍵人才梯隊(MA)建立經驗，自行開發人才評鑑工具，<br class="hidden md:block">
+                            協助企業精準盤點人才、解決組織發展痛點。
+                        </p>
+                    </div>
+
+                    <!-- 3. Current & Education Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex items-center gap-4 p-3 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition group">
+                            <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 shadow-sm shrink-0 text-sm group-hover:scale-110 transition-transform">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider leading-none mb-1">Current</p>
+                                <p class="text-sm font-bold text-slate-700 leading-tight">上銀科技 <span class="block sm:inline text-xs font-normal text-slate-500 mt-0.5 sm:mt-0">教育訓練管理師</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition group">
+                            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm shrink-0 text-sm group-hover:scale-110 transition-transform">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider leading-none mb-1">Education</p>
+                                <p class="text-sm font-bold text-slate-700 leading-tight">國立嘉義大學 <span class="block sm:inline text-xs font-normal text-slate-500 mt-0.5 sm:mt-0">碩士</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-px bg-slate-200/70"></div>
+
+                    <!-- 4. Footer: Certifications & Skills -->
+                    <div class="space-y-4">
+                        <!-- Certifications -->
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase mb-2 flex items-center gap-1.5">
+                                <i class="fas fa-certificate text-brand-500"></i> Certifications
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="openCertModal('cert-104')" class="group inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-medium border border-slate-200 hover:bg-white hover:shadow hover:text-brand-600 hover:border-brand-200 transition cursor-pointer">
+                                    104訓練發展管理師
+                                    <i class="fas fa-eye ml-1.5 text-[10px] text-brand-400 opacity-50 group-hover:opacity-100"></i>
+                                </button>
+
+                                <button onclick="openCertModal('cert-toeic')" class="group inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-medium border border-slate-200 hover:bg-white hover:shadow hover:text-brand-600 hover:border-brand-200 transition cursor-pointer">
+                                    TOEIC 750
+                                    <i class="fas fa-eye ml-1.5 text-[10px] text-brand-400 opacity-50 group-hover:opacity-100"></i>
+                                </button>
+
+                                <button onclick="openCertModal('cert-google')" class="group inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-medium border border-slate-200 hover:bg-white hover:shadow hover:text-brand-600 hover:border-brand-200 transition cursor-pointer">
+                                    Google 數位行銷
+                                    <i class="fas fa-eye ml-1.5 text-[10px] text-brand-400 opacity-50 group-hover:opacity-100"></i>
+                                </button>
+
+                                <button onclick="openCertModal('cert-gemini')" class="group inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-medium border border-slate-200 hover:bg-white hover:shadow hover:text-brand-600 hover:border-brand-200 transition cursor-pointer">
+                                    Gemini Certified Educator
+                                    <i class="fas fa-eye ml-1.5 text-[10px] text-brand-400 opacity-50 group-hover:opacity-100"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Skills -->
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase mb-2 flex items-center gap-1.5">
+                                <i class="fas fa-tools text-brand-500"></i> Software Skills
+                            </p>
+                            <div class="flex flex-wrap gap-3">
+                                <!-- 1. Pr -->
+                                <div class="skill-icon relative group cursor-pointer">
+                                    <div class="w-9 h-9 rounded-full shadow-sm border border-slate-200 flex items-center justify-center overflow-hidden hover:scale-110 transition duration-300 bg-[#00005b]">
+                                        <span class="font-bold text-[#9999FF] text-[10px]">Pr</span>
+                                    </div>
+                                    <span class="skill-tooltip absolute -top-8 left-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 transition pointer-events-none whitespace-nowrap z-20">Premiere</span>
+                                </div>
+                                
+                                <!-- 2. Ae -->
+                                <div class="skill-icon relative group cursor-pointer">
+                                    <div class="w-9 h-9 rounded-full shadow-sm border border-slate-200 flex items-center justify-center overflow-hidden hover:scale-110 transition duration-300 bg-[#00005b]">
+                                        <span class="font-bold text-[#9999FF] text-[10px]">Ae</span>
+                                    </div>
+                                    <span class="skill-tooltip absolute -top-8 left-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 transition pointer-events-none whitespace-nowrap z-20">After Effects</span>
+                                </div>
+
+                                <!-- 3. Ai -->
+                                <div class="skill-icon relative group cursor-pointer">
+                                    <div class="w-9 h-9 rounded-full shadow-sm border border-slate-200 flex items-center justify-center overflow-hidden hover:scale-110 transition duration-300 bg-[#330000]">
+                                        <span class="font-bold text-[#FF9A00] text-[10px]">Ai</span>
+                                    </div>
+                                    <span class="skill-tooltip absolute -top-8 left-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 transition pointer-events-none whitespace-nowrap z-20">Illustrator</span>
+                                </div>
+
+                                <!-- 4. Canva -->
+                                <div class="skill-icon relative group cursor-pointer">
+                                    <div class="w-9 h-9 rounded-full shadow-sm border border-slate-200 flex items-center justify-center overflow-hidden hover:scale-110 transition duration-300 bg-gradient-to-br from-[#00C4CC] to-[#7D2AE8]">
+                                        <span class="font-bold text-white text-base italic font-serif">C</span>
+                                    </div>
+                                    <span class="skill-tooltip absolute -top-8 left-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 transition pointer-events-none whitespace-nowrap z-20">Canva</span>
+                                </div>
+
+                                <!-- 5. Vyond -->
+                                <div class="skill-icon relative group cursor-pointer">
+                                    <div class="w-9 h-9 rounded-full shadow-sm border border-slate-200 flex items-center justify-center overflow-hidden hover:scale-110 transition duration-300 bg-white">
+                                        <div class="w-6 h-6 rounded-full bg-[#E9521F] relative flex items-center justify-center">
+                                             <i class="fas fa-play text-white text-[8px] ml-0.5"></i>
+                                        </div>
+                                    </div>
+                                    <span class="skill-tooltip absolute -top-8 left-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 transition pointer-events-none whitespace-nowrap z-20">Vyond</span>
+                                </div>
+
+                                <!-- 6. Office 365 -->
+                                <div class="skill-icon relative group cursor-pointer">
+                                    <div class="w-9 h-9 rounded-full shadow-sm border border-slate-200 flex items-center justify-center overflow-hidden hover:scale-110 transition duration-300 bg-white">
+                                        <div class="w-6 h-6 rounded bg-gradient-to-br from-[#E74C3C] to-[#D35400] text-white flex items-center justify-center text-[10px] font-bold">O</div>
+                                    </div>
+                                    <span class="skill-tooltip absolute -top-8 left-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 transition pointer-events-none whitespace-nowrap z-20">Office 365</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section (Two-Column Layout) -->
+    <section id="experience" class="py-20 bg-white relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-heading font-bold text-slate-900 text-center mb-8 reveal">
+                工作經歷 
+                <span class="block text-xl text-brand-600 font-medium mt-2">Professional Experience</span>
+            </h2>
+
+            <!-- Mode Switcher -->
+            <div class="flex justify-center mb-12 reveal">
+                <div class="relative inline-flex mode-switcher rounded-full p-1 bg-slate-100/30">
+                    <div id="mode-indicator" class="absolute inset-0 w-1/2 rounded-full transition-transform duration-300 bg-brand-50 shadow-sm"></div>
+                    <button id="mode-featured" onclick="switchExperienceMode('featured')" class="mode-button active px-6 py-2 text-sm font-semibold rounded-l-full transition relative z-10">
+                        精選經歷
+                    </button>
+                    <button id="mode-all" onclick="switchExperienceMode('all')" class="mode-button px-6 py-2 text-sm font-semibold rounded-r-full border border-l-0 text-brand-600 hover:bg-brand-50 transition relative z-10">
+                        全部經歷
+                    </button>
+                </div>
+                <div id="mode-live" class="sr-only" aria-live="polite"></div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8 min-h-[550px] reveal">
+                
+                <!-- Left: Job List (Navigation with Timeline) -->
+                <div id="job-list-container" class="md:w-1/3 flex flex-col space-y-4 relative overflow-x-auto md:overflow-visible pb-4 md:pb-0">
+                    <!-- Timeline vertical line (hidden on mobile if stacked) -->
+                    <div class="timeline-line hidden md:block"></div>
+
+                    <!-- Job Item: HIWIN (Featured & All) -->
+                    <div id="item-hiwin" onclick="showJob(event, 'hiwin')" class="job-item relative pl-8 md:pl-10 p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition duration-300 group min-w-[250px]" data-category="featured all">
+                        <div class="timeline-dot absolute left-[14px] md:left-[14px] top-6 w-3 h-3 bg-slate-300 rounded-full border-2 border-white shadow-sm transition-all duration-300 z-10 hidden md:block"></div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-mono text-slate-400 mb-1">May 2024 - Present</span>
+                            <h3 class="font-bold text-slate-800 text-lg group-hover:text-brand-600 transition">上銀科技 HIWIN</h3>
+                            <p class="text-sm text-slate-500">教育訓練管理師</p>
+                        </div>
+                    </div>
+
+                    <!-- Job Item: NTCU (Featured & All) -->
+                    <div id="item-ntcu" onclick="showJob(event, 'ntcu')" class="job-item relative pl-8 md:pl-10 p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition duration-300 group min-w-[250px]" data-category="featured all">
+                        <div class="timeline-dot absolute left-[14px] md:left-[14px] top-6 w-3 h-3 bg-slate-300 rounded-full border-2 border-white shadow-sm transition-all duration-300 z-10 hidden md:block"></div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-mono text-slate-400 mb-1">Jun 2023 - Apr 2024</span>
+                            <h3 class="font-bold text-slate-800 text-lg group-hover:text-brand-600 transition">臺中教育大學 NTCU</h3>
+                            <p class="text-sm text-slate-500">專任助理</p>
+                        </div>
+                    </div>
+
+                    <!-- Job Item: Youngstown State University (Featured & All) -->
+                    <div id="item-youngstown" onclick="showJob(event, 'youngstown')" class="job-item relative pl-8 md:pl-10 p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition duration-300 group min-w-[250px]" data-category="featured all">
+                        <div class="timeline-dot absolute left-[14px] md:left-[14px] top-6 w-3 h-3 bg-slate-300 rounded-full border-2 border-white shadow-sm transition-all duration-300 z-10 hidden md:block"></div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-mono text-slate-400 mb-1">Jul 2023 - Aug 2023</span>
+                            <h3 class="font-bold text-slate-800 text-lg group-hover:text-brand-600 transition">Youngstown State Univ.</h3>
+                            <p class="text-sm text-slate-500">專案程式開發實習生</p>
+                        </div>
+                    </div>
+
+                    <!-- Job Item: USI (Featured & All) -->
+                    <div id="item-usi" onclick="showJob(event, 'usi')" class="job-item relative pl-8 md:pl-10 p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition duration-300 group min-w-[250px]" data-category="featured all">
+                        <div class="timeline-dot absolute left-[14px] md:left-[14px] top-6 w-3 h-3 bg-slate-300 rounded-full border-2 border-white shadow-sm transition-all duration-300 z-10 hidden md:block"></div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-mono text-slate-400 mb-1">Feb 2023 - Jun 2023</span>
+                            <h3 class="font-bold text-slate-800 text-lg group-hover:text-brand-600 transition">環鴻科技 USI</h3>
+                            <p class="text-sm text-slate-500">全球人資發展處(COE) 實習生</p>
+                        </div>
+                    </div>
+
+                    <!-- Job Item: YSCD (Featured & All) -->
+                    <div id="item-yscd" onclick="showJob(event, 'yscd')" class="job-item relative pl-8 md:pl-10 p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition duration-300 group min-w-[250px]" data-category="featured all">
+                         <div class="timeline-dot absolute left-[14px] top-6 w-3 h-3 bg-slate-300 rounded-full border-2 border-white shadow-sm transition-all duration-300 z-10 hidden md:block"></div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-mono text-slate-400 mb-1">2022</span>
+                            <h3 class="font-bold text-slate-800 text-lg group-hover:text-brand-600 transition">御史社區發展協會 YSCD</h3>
+                            <p class="text-sm text-slate-500">行銷企劃實習生</p>
+                        </div>
+                    </div>
+
+                    <!-- Job Item: 921 (All) -->
+                    <div id="item-921" onclick="showJob(event, '921')" class="job-item relative pl-8 md:pl-10 p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition duration-300 group min-w-[250px] hidden-mode" data-category="all">
+                         <div class="timeline-dot absolute left-[14px] top-6 w-3 h-3 bg-slate-300 rounded-full border-2 border-white shadow-sm transition-all duration-300 z-10 hidden md:block"></div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-mono text-slate-400 mb-1">2021 - 2022</span>
+                            <h3 class="font-bold text-slate-800 text-lg group-hover:text-brand-600 transition">921地震教育園區</h3>
+                            <p class="text-sm text-slate-500">數位教材設計實習生</p>
+                        </div>
+                    </div>
+
+                    <!-- Job Item: NLPI (All) -->
+                    <div id="item-nlpi" onclick="showJob(event, 'nlpi')" class="job-item relative pl-8 md:pl-10 p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition duration-300 group min-w-[250px] hidden-mode" data-category="all">
+                         <div class="timeline-dot absolute left-[14px] top-6 w-3 h-3 bg-slate-300 rounded-full border-2 border-white shadow-sm transition-all duration-300 z-10 hidden md:block"></div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-mono text-slate-400 mb-1">2020</span>
+                            <h3 class="font-bold text-slate-800 text-lg group-hover:text-brand-600 transition">國立公共資訊圖書館 NLPI</h3>
+                            <p class="text-sm text-slate-500">美編設計實習生</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Content Preview Pane -->
+                <div id="job-content-pane" class="md:w-2/3 bg-slate-50 rounded-3xl p-6 md:p-8 border border-slate-200 relative min-h-[500px] shadow-inner">
+                    
+                    
+                    <!-- Content: HIWIN -->
+                    <div id="content-hiwin" class="job-content-block job-card-container">
+                        <div class="job-card-decor"></div>
+                        <div class="mb-6 border-b border-slate-200 pb-4">
+                            <h3 class="text-2xl md:text-3xl font-heading font-bold text-slate-800 mb-2">上銀科技 HIWIN</h3>
+                            <div class="flex flex-wrap items-center gap-3 text-sm">
+                                <span class="font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">教育訓練管理師</span>
+                                <span class="text-slate-300 hidden sm:inline">|</span>
+                                <span class="text-slate-500">人力資源部</span>
+                                <span class="text-slate-300 hidden sm:inline">|</span>
+                                <span class="text-slate-500 font-mono">May 2024 — Present</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Project 1 -->
+                            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50 hover:border-brand-100 transition">
+                                <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-lg">
+                                    <span class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-sm"><i class="fas fa-users"></i></span> 
+                                    關鍵人才梯隊建立
+                                </h4>
+                                <ul class="space-y-3 text-sm text-slate-600">
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">組織核心單位面臨人才斷層風險，需及早系統化建立接班梯隊。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">主導 3 年期 MA 培訓計畫，培訓 <span class="font-extrabold text-brand-600">150+</span> 關鍵潛力人才。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">建構「成長/表達/整合」三階段地圖，自行開發人才評鑑工具。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> <span class="leading-relaxed font-medium text-slate-800">促成 <span class="font-extrabold text-brand-600">44</span> 位學員晉升 (含 <span class="font-extrabold text-brand-600">14</span> 位管理職)，強化組織接班戰力。</span></li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Project 2 -->
+                            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50 hover:border-brand-100 transition">
+                                <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-lg">
+                                    <span class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-sm"><i class="fas fa-laptop-code"></i></span>
+                                    數位教材開發與推廣
+                                </h4>
+                                <ul class="space-y-3 text-sm text-slate-600">
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">傳統教材製作流程耗時，且呈現形式較為單一。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">建立數位教材品質審核流程，並導入AI工具提升教材開發效率與品質。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">從 0 到 1 制定數位教材開發規範，並導入 Vyond 取代傳統錄製。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> <span class="leading-relaxed font-medium text-slate-800">創作 <span class="font-extrabold text-brand-600">11</span> 支全新教材，累積 <span class="font-extrabold text-brand-600">800+</span> 觀看人次，滿意度達 <span class="font-extrabold text-brand-600">4.52</span>。</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content: NTCU -->
+                    <div id="content-ntcu" class="job-content-block hidden animate-fade-in job-card-container">
+                         <div class="job-card-decor"></div>
+                        <div class="mb-6 border-b border-slate-200 pb-4 flex justify-between items-start">
+                            <div>
+                                <h3 class="text-2xl md:text-3xl font-heading font-bold text-slate-800 mb-2">臺中教育大學 NTCU</h3>
+                                <div class="flex flex-wrap items-center gap-3 text-sm">
+                                    <span class="font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">專任助理</span>
+                                    <span class="text-slate-300 hidden sm:inline">|</span>
+                                    <span class="text-slate-500">智慧教育中心</span>
+                                    <span class="text-slate-300 hidden sm:inline">|</span>
+                                    <span class="text-slate-500 font-mono">Jun 2023 — Apr 2024</span>
+                                </div>
+                            </div>
+                            <a href="https://youtu.be/msQ0sdkLSAM" target="_blank" class="text-red-500 hover:text-red-600 transition hover:scale-110" title="觀看影片"><i class="fab fa-youtube text-3xl"></i></a>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Project 1 -->
+                            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50 hover:border-brand-100 transition">
+                                <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-lg">
+                                    <span class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-sm"><i class="fas fa-tasks"></i></span> 
+                                    中心營運與計畫統籌
+                                </h4>
+                                <ul class="space-y-3 text-sm text-slate-600">
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">執行高教深耕 <span class="font-extrabold text-brand-600">800萬/年</span> 經費計畫，協助 從 0 到 1 設立中心。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">統籌學術研討會、校內外徵件計畫及行政核銷控管。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">建立標準化作業流程與經費動支規範。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> <span class="leading-relaxed font-medium text-slate-800">成功協助中心掛牌運作。</span></li>
+                                </ul>
+                            </div>
+
+                            <!-- Project 2: 品牌識別與網頁設計 (Added Link & Icon) -->
+                            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50 hover:border-brand-100 transition">
+                                <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-lg group">
+                                    <span class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-sm"><i class="fas fa-palette"></i></span>
+                                    <a href="https://aiec.ntcu.edu.tw/" target="_blank" class="hover:text-brand-600 transition" title="前往智慧教育中心官網">
+                                        品牌識別與網頁設計 
+                                        <i class="fas fa-external-link-alt text-base ml-2 text-brand-500 opacity-70 group-hover:opacity-100 transition"></i>
+                                    </a>
+                                </h4>
+                                <ul class="space-y-3 text-sm text-slate-600">
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">新創單位缺乏品牌形象。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">獨立負責中心 CIS 識別系統 (Logo/主視覺) 設計及 官網前端 架設維護。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">打造一致性的品牌視覺與專業數位門面。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> <span class="leading-relaxed font-medium text-slate-800">有效提升對外宣傳效益與使用者瀏覽體驗。</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content: Youngstown -->
+                    <div id="content-youngstown" class="job-content-block hidden animate-fade-in job-card-container">
+                         <div class="job-card-decor"></div>
+                        <div class="mb-6 border-b border-slate-200 pb-4">
+                            <h3 class="text-2xl md:text-3xl font-heading font-bold text-slate-800 mb-2">Youngstown State University</h3>
+                            <div class="flex flex-wrap items-center gap-3 text-sm">
+                                <span class="font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">專案程式開發實習生</span>
+                                <span class="text-slate-300">|</span>
+                                <span class="text-slate-500">Ohio, USA</span>
+                                <span class="text-slate-300 hidden sm:inline">|</span>
+                                <span class="text-slate-500 font-mono">Jul 2023 — Aug 2023</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50">
+                            <h4 class="font-bold text-slate-800 mb-3 text-lg flex items-center gap-2"><i class="fas fa-code-branch text-brand-600" aria-hidden="true"></i> 前後端開發設計</h4>
+                            <ul class="space-y-3 text-sm text-slate-600">
+                                <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">參與學海築夢海外實習，需開發整合前後端之專案功能。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">負責前端網頁設計、Github 建置與後端 Python 功能開發。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">積極跨文化溝通確認需求，善用 ChatGPT 輔助解決 Python 開發瓶頸。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> <span class="leading-relaxed font-medium text-slate-800">成功交付專案，提升 AI 工具應用能力與跨文化溝通技巧。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Content: USI -->
+                    <div id="content-usi" class="job-content-block hidden animate-fade-in job-card-container">
+                         <div class="job-card-decor"></div>
+                        <div class="mb-6 border-b border-slate-200 pb-4 flex justify-between items-start">
+                            <div>
+                                <h3 class="text-2xl md:text-3xl font-heading font-bold text-slate-800 mb-2">環鴻科技 USI</h3>
+                                <div class="flex flex-wrap items-center gap-3 text-sm">
+                                    <span class="font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">全球人資發展處(COE) 實習生</span>
+                                    <span class="text-slate-300">|</span>
+                                    <span class="text-slate-500">Nantou, Taiwan</span>
+                                    <span class="text-slate-300 hidden sm:inline">|</span>
+                                    <span class="text-slate-500 font-mono">Feb 2023 — Jun 2023</span>
+                                </div>
+                            </div>
+                            <!-- NEW YOUTUBE LINK ADDED HERE -->
+                            <a href="https://youtu.be/_uIC6MYbikM?si=Bhmcr4G2V29umLi3" target="_blank" class="text-red-500 hover:text-red-600 transition hover:scale-110" title="觀看影片"><i class="fab fa-youtube text-3xl"></i></a>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Project 1: 培訓體系標準化 -->
+                            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50 hover:border-brand-100 transition">
+                                <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-lg">
+                                    <span class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-sm"><i class="fas fa-sitemap"></i></span> 
+                                    培訓體系標準化
+                                </h4>
+                                <ul class="space-y-3 text-sm text-slate-600">
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">全球有多個子公司，但新人培訓缺乏統一標準。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">協助集團總部規劃「新人訓地圖」，確保擁有一致的培訓框架。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">以使用者中心思維，重新梳理公司沿革、組織文化等關鍵資訊。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> <span class="leading-relaxed font-medium text-slate-800">於時限內完成專案交付，協助新人快速適應並認同組織文化。</span></li>
+                                </ul>
+                            </div>
+
+                            <!-- Project 2: 教材優化與多媒體製作 -->
+                            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50 hover:border-brand-100 transition">
+                                <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-lg">
+                                    <span class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center text-brand-600 text-sm"><i class="fas fa-video"></i></span> 
+                                    教材優化與多媒體製作
+                                </h4>
+                                <ul class="space-y-3 text-sm text-slate-600">
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">組織內部對於 USI University 的運作宗旨與資源認知度不足。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">負責製作組織形象宣傳影片，提升資訊傳遞的吸引力與易讀性。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">用 Canva 與 Powtoon ，將生硬的文字資訊轉化為吸睛動態內容。</span></li>
+                                    <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> <span class="leading-relaxed font-medium text-slate-800">成功產出並有效提升跨部門對企業大學品牌的認知與關注度。</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content: YSCD -->
+                    <div id="content-yscd" class="job-content-block hidden animate-fade-in job-card-container">
+                         <div class="job-card-decor"></div>
+                        <div class="mb-6 border-b border-slate-200 pb-4 flex justify-between items-start">
+                            <div>
+                                <h3 class="text-2xl md:text-3xl font-heading font-bold text-slate-800 mb-2">御史社區發展協會 YSCD</h3>
+                                <div class="flex flex-wrap items-center gap-3 text-sm">
+                                    <span class="font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">行銷企劃實習生</span>
+                                    <span class="text-slate-300">|</span>
+                                    <span class="text-slate-500 font-mono">Jul 2022 — Aug 2022</span>
+                                </div>
+                            </div>
+                            <a href="https://youtu.be/_tqbvWvf1xY" target="_blank" class="text-red-500 hover:text-red-600 transition hover:scale-110" title="觀看影片"><i class="fab fa-youtube text-3xl"></i></a>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50">
+                            <h4 class="font-bold text-slate-800 mb-3 text-lg flex items-center gap-2"><i class="fas fa-bullhorn text-brand-600" aria-hidden="true"></i> 行銷企劃與多媒體製作</h4>
+                            <ul class="space-y-3 text-sm text-slate-600">
+                                <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">社區缺乏明確的品牌調性、具吸引力的數位行銷素材。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">獨立負責從概念發想到最終交付行銷宣傳品。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">負責腳本企劃、影片拍攝並運用Adobe系列軟體完成多媒體創作。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> 
+                                    <span class="leading-relaxed font-medium text-slate-800">
+                                        高效且獨立產出 <span class="font-extrabold text-brand-600">6</span> 件海報、
+                                        <span class="font-extrabold text-brand-600">1</span> 組行銷貼圖與 
+                                        <span class="font-extrabold text-brand-600">3</span> 支宣傳影片，<br>
+                                        <span class="block mt-1">成功結合創意提升社區品牌能見度。</span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Content: 921 -->
+                    <div id="content-921" class="job-content-block hidden animate-fade-in job-card-container">
+                         <div class="job-card-decor"></div>
+                        <div class="mb-6 border-b border-slate-200 pb-4 flex justify-between items-start">
+                            <div>
+                                <h3 class="text-2xl md:text-3xl font-heading font-bold text-slate-800 mb-2">921地震教育園區</h3>
+                                <div class="flex flex-wrap items-center gap-3 text-sm">
+                                    <span class="font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">數位教材設計實習生</span>
+                                    <span class="text-slate-300">|</span>
+                                    <span class="text-slate-500 font-mono">2021 — 2022</span>
+                                </div>
+                            </div>
+                            <a href="https://youtu.be/lxxCT4uO7hs" target="_blank" class="text-red-500 hover:text-red-600 transition hover:scale-110" title="觀看影片"><i class="fab fa-youtube text-3xl"></i></a>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50">
+                            <h4 class="font-bold text-slate-800 mb-3 text-lg flex items-center gap-2"><i class="fas fa-shield-alt text-brand-600" aria-hidden="true"></i> 防災數位教材設計</h4>
+                            <ul class="space-y-3 text-sm text-slate-600">
+                                <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">將地震科普知識，轉化為數位教材提升公眾防災意識。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">獨立負責從概念發想到最終交付數位教材。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">負責腳本企劃、影片拍攝並運用Adobe系列軟體完成多媒體創作。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> <span class="leading-relaxed font-medium text-slate-800">高效且獨立產出 <span class="font-extrabold text-brand-600">7</span> 支教學影片、 <span class="font-extrabold text-brand-600">3</span> 份教材簡報。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Content: NLPI -->
+                    <div id="content-nlpi" class="job-content-block hidden animate-fade-in job-card-container">
+                         <div class="job-card-decor"></div>
+                        <div class="mb-6 border-b border-slate-200 pb-4 flex justify-between items-start">
+                            <div>
+                                <h3 class="text-2xl md:text-3xl font-heading font-bold text-slate-800 mb-2">國立公共資訊圖書館 NLPI</h3>
+                                <div class="flex flex-wrap items-center gap-3 text-sm">
+                                    <span class="font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">美編設計實習生</span>
+                                    <span class="text-slate-300">|</span>
+                                    <span class="text-slate-500 font-mono">Jul 2020 — Aug 2020</span>
+                                </div>
+                            </div>
+                            <a href="https://www.youtube.com/watch?v=TW_d66TJN6k" target="_blank" class="text-red-500 hover:text-red-600 transition hover:scale-110" title="觀看影片"><i class="fab fa-youtube text-3xl"></i></a>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100/50">
+                            <h4 class="font-bold text-slate-800 mb-3 text-lg flex items-center gap-2"><i class="fas fa-users text-brand-600" aria-hidden="true"></i> 社群經營與視覺設計</h4>
+                            <ul class="space-y-3 text-sm text-slate-600">
+                                <li class="flex gap-3 items-start"><span class="star-tag star-s shrink-0 mt-0.5">S</span> <span class="leading-relaxed">圖書館日常營運及活動推廣需大量、高品質的視覺素材。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-t shrink-0 mt-0.5">T</span> <span class="leading-relaxed">負責各類製作物、影片設計，同時支援社群平台的圖文製作。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-a shrink-0 mt-0.5">A</span> <span class="leading-relaxed">負責平面設計、影片剪輯並運用Adobe系列軟體完成多媒體創作。</span></li>
+                                <li class="flex gap-3 items-start"><span class="star-tag star-r shrink-0 mt-0.5">R</span> <span class="leading-relaxed font-medium text-slate-800">高效完成 <span class="font-extrabold text-brand-600">11</span> 份 平面設計、<span class="font-extrabold text-brand-600">3</span> 支影片剪輯，獲得團隊高度肯定。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Extracurricular Activities -->
+    <section id="activity" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-heading font-bold text-slate-900 text-center mb-12 reveal">
+                課外活動 
+                <span class="block text-xl text-brand-600 font-medium mt-2">Extracurricular Activities</span>
+            </h2>
+
+            <!-- Grid Container - 3 Columns -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                
+                <!-- Awards -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 reveal delay-0 flex flex-col h-full hover:shadow-lg transition-shadow duration-300">
+                    <div class="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center text-red-600 text-xl mb-4 shadow-sm">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center justify-between">
+                        競賽得獎
+                        <span class="bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded-full">10項</span>
+                    </h3>
+                    
+                    <!-- Top 3 -->
+                    <ul class="space-y-5 mb-4">
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2022</span>
+                            <span class="text-sm font-bold text-slate-700 block">全球華人教育遊戲設計大賞</span>
+                            <span class="text-xs text-brand-600 font-bold block mb-1">金獎 / 人氣獎</span>
+                            <a href="https://www.youtube.com/watch?v=OAYj-JnOfac" target="_blank" class="text-xs text-slate-500 hover:text-red-600 transition block mt-1"><i class="fab fa-youtube mr-1"></i>《掘跡者》</a>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2022</span>
+                            <span class="text-sm font-bold text-slate-700 block">高雄放視大賞</span>
+                            <span class="text-xs text-brand-600 font-bold block mb-1">PC遊戲創作組 入圍</span>
+                            <div class="flex items-center gap-2 mt-1">
+                                <a href="https://waiting816529.github.io/TangDynasty/" target="_blank" class="text-xs text-slate-500 hover:text-brand-600 transition flex items-center group"><i class="fas fa-globe mr-1 group-hover:text-brand-500"></i>《盛唐穿越指南》</a>
+                                <span class="text-slate-300 text-xs">|</span>
+                                <a href="https://drive.google.com/file/d/1kvSB_xO8B_Bfbi1gQ0W4pSQRR1Tn-Asj/view?usp=sharing" target="_blank" class="text-xs text-slate-500 hover:text-red-600 transition flex items-center group"><i class="fas fa-file-pdf mr-1 group-hover:text-red-500"></i>《企劃書》</a>
+                            </div>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2020</span>
+                            <span class="text-sm font-bold text-slate-700 block">LINE FRESH 商業行銷組</span>
+                            <span class="text-xs text-brand-600 font-bold block mb-1">16強</span>
+                            <a href="https://youtu.be/PH-k2Rhvzi0" target="_blank" class="text-xs text-slate-500 hover:text-red-600 transition block mt-1"><i class="fab fa-youtube mr-1"></i>《開創劇場學習新契機》</a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Hidden Awards (Restored Links) -->
+                    <ul id="more-awards" class="hidden space-y-5 pt-4 border-t border-dashed border-slate-200 mb-4">
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2021</span>
+                            <span class="text-sm font-bold text-slate-600 block">【公部門見習計劃】B組</span>
+                            <span class="text-xs text-brand-600 font-bold block mb-1">第一名 / 最佳人氣獎</span>
+                            <a href="https://youtu.be/Q2KL9U4RA-g" target="_blank" class="text-xs text-slate-500 hover:text-red-600 transition block mt-1"><i class="fab fa-youtube mr-1"></i>《921地震教育園區見習心得分享》</a>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2021</span>
+                            <span class="text-sm font-bold text-slate-600 block">采威國際資訊【夥盃的考驗】</span>
+                            <span class="text-xs text-brand-600 font-bold block mb-1">第二名</span>
+                            <a href="https://drive.google.com/drive/folders/1xbcyDZMBkfqpBqV38PLkxhljJzNy24Sh?usp=drive_link" target="_blank" class="text-xs text-slate-500 hover:text-brand-600 transition block mt-1"><i class="fab fa-google-drive mr-1"></i>《好食野餐趣》</a>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2020</span>
+                            <span class="text-sm font-bold text-slate-600 block">嘉大X大林慈濟數位教材爭霸賽</span>
+                            <span class="text-xs text-brand-600 font-bold block mb-1">第一名</span>
+                            <a href="https://youtu.be/scliZntfWvQ" target="_blank" class="text-xs text-slate-500 hover:text-red-600 transition block mt-1"><i class="fab fa-youtube mr-1"></i>《Pain=騙？認識手術後止痛》</a>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2020</span>
+                            <span class="text-sm font-bold text-slate-600 block">15th K.T.科藝競賽</span>
+                            <span class="text-xs text-brand-600 font-bold block mb-1">數位遊戲組 優選</span>
+                            <a href="https://youtu.be/1DDCmLkNdLQ" target="_blank" class="text-xs text-slate-500 hover:text-red-600 transition block mt-1"><i class="fab fa-youtube mr-1"></i>《Lotus Heritage 白河蓮華錄》</a>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2020</span>
+                            <span class="text-sm font-bold text-slate-600 block">全國大專院校StoryMap競賽</span>
+                            <span class="text-xs text-slate-400 font-bold block mb-1">優選</span>
+                        </li>
+                         <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2019</span>
+                            <span class="text-sm font-bold text-slate-600 block">國際華文暨教育盃電子書創作大賽</span>
+                            <span class="text-xs text-slate-400 font-bold block mb-1">佳作</span>
+                            <a href="https://drive.google.com/file/d/13xAAewwyDnqU10CgvsKkmgVdYmnrtxJf/view?usp=sharing" target="_blank" class="text-xs text-slate-500 hover:text-brand-600 transition block mt-1"><i class="fab fa-google-drive mr-1"></i>《餘韻》</a>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-red-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">2019</span>
+                            <span class="text-sm font-bold text-slate-600 block">全國大專院校倫理個案分析</span>
+                            <span class="text-xs text-brand-600 font-bold block mb-1">第三名</span>
+                             <a href="https://drive.google.com/drive/folders/1qxR0py5-iWvRzCdQ4zBoKKh2mIqgN6al" target="_blank" class="text-xs text-slate-500 hover:text-brand-600 transition block mt-1"><i class="fab fa-google-drive mr-1"></i>《當銀髮族遇上AIoT》</a>
+                        </li>
+                    </ul>
+
+                    <!-- View More Button -->
+                    <button onclick="toggleAwards()" class="mt-auto w-full py-2.5 text-xs font-bold text-slate-500 hover:text-brand-600 bg-slate-50 hover:bg-slate-100 rounded-lg transition flex items-center justify-center gap-2 group border border-slate-100">
+                        <span id="view-more-text">View More Awards (7)</span>
+                        <i id="view-more-icon" class="fas fa-chevron-down transition-transform group-hover:translate-y-0.5"></i>
+                    </button>
+                </div>
+
+                <!-- Research (Restored Links) -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 reveal delay-100 flex flex-col h-full hover:shadow-lg transition-shadow duration-300">
+                     <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 text-xl mb-4 shadow-sm">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center justify-between">
+                        學術研究
+                        <span class="bg-blue-100 text-blue-600 text-xs font-bold px-2 py-1 rounded-full">4項</span>
+                    </h3>
+                    
+                    <ul class="space-y-5 mb-4">
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-blue-300 transition-colors">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-brand-600">碩士論文</span>
+                                <span class="text-[10px] text-slate-400 font-medium">2023</span>
+                            </div>
+                            <span class="text-sm font-medium text-slate-700 block mb-1">不同合作學習模式對於大學生學習之影響</span>
+                             <a href="https://drive.google.com/file/d/10jmFOR3nCN4MblyhQfWtg7QAPi_g8uh6/view?usp=sharing" target="_blank" class="text-xs text-slate-400 hover:text-brand-600 transition inline-flex items-center"><i class="fas fa-external-link-alt mr-1"></i>View Paper</a>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-blue-300 transition-colors">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-brand-600">大專學生研究計畫</span>
+                                <span class="text-[10px] text-slate-400 font-medium">2022</span>
+                            </div>
+                            <span class="text-sm font-medium text-slate-700 block">AI教育機器人的對話風格對於兒童學習動機之影響</span>
+                             <a href="https://www.youtube.com/watch?v=9tZ1TtPBtgU" target="_blank" class="text-xs text-slate-500 hover:text-red-600 transition block mt-1"><i class="fab fa-youtube mr-1"></i>《星星知多少》</a>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-blue-300 transition-colors">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-brand-600">教學實踐研究計畫</span>
+                                <span class="text-[10px] text-slate-400 font-medium">2021</span>
+                            </div>
+                            <span class="text-sm font-medium text-slate-700 block">桌遊教學對於通識課程「礦物與生活」學習成效之研究</span>
+                            <a href="https://www.youtube.com/watch?v=OAYj-JnOfac" target="_blank" class="text-xs text-slate-500 hover:text-red-600 transition block mt-1"><i class="fab fa-youtube mr-1"></i>《掘跡者》</a>
+                        </li>
+                    </ul>
+
+                    <ul id="more-research" class="hidden space-y-5 pt-4 border-t border-dashed border-slate-200 mb-4">
+                        <li class="relative pl-4 border-l-2 border-slate-200">
+                             <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-brand-600">教學實踐研究計畫</span>
+                                <span class="text-[10px] text-slate-400 font-medium">2022</span>
+                            </div>
+                            <span class="text-sm font-medium text-slate-700 block">網路探究式教學法應用於「地球科學探索」</span>
+                        </li>
+                    </ul>
+
+                    <button onclick="toggleResearch()" class="mt-auto w-full py-2.5 text-xs font-bold text-slate-500 hover:text-brand-600 bg-slate-50 hover:bg-slate-100 rounded-lg transition flex items-center justify-center gap-2 group border border-slate-100">
+                        <span id="view-research-text">View More Research (1)</span>
+                        <i id="view-research-icon" class="fas fa-chevron-down transition-transform group-hover:translate-y-0.5"></i>
+                    </button>
+                </div>
+
+                <!-- Leadership (Restored Links) -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 reveal delay-200 flex flex-col h-full hover:shadow-lg transition-shadow duration-300">
+                     <div class="w-12 h-12 bg-orange-50 rounded-lg flex items-center justify-center text-orange-600 text-xl mb-4 shadow-sm">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center justify-between">
+                        幹部經歷
+                        <span class="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-1 rounded-full">2項</span>
+                    </h3>
+                    <ul class="space-y-5">
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-orange-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">嘉義大學數位系《超數世代》</span>
+                            <span class="text-sm font-bold text-slate-700 block">活動企劃組 組長</span>
+                            <div class="flex flex-wrap items-center gap-2 mt-2">
+                                <a href="https://www.youtube.com/results?search_query=%E5%98%89%E7%BE%A9%E5%A4%A7%E5%AD%B8+%E6%95%B8%E4%BD%8D%E5%AD%B8%E7%BF%92%E8%A8%AD%E8%A8%88%E8%88%87%E7%AE%A1%E7%90%86%E5%AD%B8%E7%B3%BB+111%E7%95%A2%E6%A5%AD%E5%B1%95%E8%A6%BD+%E8%B6%85%E6%95%B8%E4%BB%A3+%E5%AE%A3%E5%82%B3%E5%8B%95%E7%95%AB" target="_blank" class="text-[10px] px-2 py-0.5 bg-slate-100 rounded text-slate-500 hover:text-red-500 transition flex items-center group" title="觀看宣傳動畫">
+                                    <i class="fab fa-youtube mr-1"></i>宣傳動畫
+                                </a>
+                            </div>
+                        </li>
+                        <li class="relative pl-4 border-l-2 border-slate-200 hover:border-orange-300 transition-colors">
+                            <span class="text-xs font-bold text-slate-400 block mb-1">嘉義大學 數位系系學會</span>
+                            <span class="text-sm font-bold text-slate-700 block">社群編輯長</span>
+                            <div class="flex flex-wrap items-center gap-2 mt-2">
+                                <a href="https://youtu.be/KsFe9QhFqnI" target="_blank" class="text-[10px] px-2 py-0.5 bg-slate-100 rounded text-slate-500 hover:text-red-500 transition"><i class="fab fa-youtube mr-1"></i>系刊005</a>
+                                <a href="https://dedmnews.wixsite.com/news008" target="_blank" class="text-[10px] px-2 py-0.5 bg-slate-100 rounded text-slate-500 hover:text-brand-500 transition"><i class="fas fa-newspaper mr-1"></i>系刊008</a>
+                                <a href="https://dedmnews.wixsite.com/news009" target="_blank" class="text-[10px] px-2 py-0.5 bg-slate-100 rounded text-slate-500 hover:text-brand-500 transition"><i class="fas fa-newspaper mr-1"></i>系刊009</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-16">
+        <div id="lets-connect" class="max-w-4xl mx-auto px-4 text-center reveal">
+            <h2 class="text-2xl font-heading font-bold text-white mb-2">Let's Connect</h2>
+            <p class="text-slate-400 mb-8 text-sm">期待與您進一步交流與合作，共創價值。</p>
+            
+            <a id="lets-cta" href="mailto:waiting816529@gmail.com" class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 bg-white text-slate-900 rounded-full text-base font-bold hover:bg-brand-50 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(14,165,233,0.5)] transform hover:-translate-y-1" aria-label="與我聯繫：寄信至 waiting816529@gmail.com">
+                <i class="fas fa-envelope text-brand-600 text-lg group-hover:scale-110 transition-transform"></i>
+                <span>waiting816529@gmail.com</span>
+            </a>
+
+            <div class="mt-12 pt-8 border-t border-slate-800/50 flex flex-col md:flex-row justify-center items-center gap-4 text-xs text-slate-500 font-mono">
+                <span>&copy; 2025 Waiting. All Rights Reserved.</span>
+                <span>|</span>
+                <span>Designed & Built by Waiting</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AI Chatbot Interface -->
+    <div id="ai-chat-widget" class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+        
+        <!-- Chat Window -->
+        <div id="chat-window" class="chat-container bg-white w-[85vw] md:w-96 h-[450px] rounded-2xl shadow-2xl border border-slate-200/80 backdrop-blur-sm overflow-hidden mb-4 hidden flex flex-col">
+            <!-- Header -->
+            <div class="bg-slate-900 p-4 flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-gradient-to-tr from-brand-600 to-brand-400 rounded-full flex items-center justify-center text-white shadow-lg">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-sm">AI 履歷助手</h4>
+                        <p class="text-slate-400 text-[10px] flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online
+                        </p>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="text-slate-400 hover:text-white transition w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Messages Area -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 bg-slate-50 space-y-4 scroll-smooth">
+                <!-- Welcome Message -->
+                <div class="flex gap-3 animate-fade-in">
+                    <div class="w-8 h-8 bg-brand-100 rounded-full flex-shrink-0 flex items-center justify-center text-brand-600 text-xs font-bold border border-brand-200">AI</div>
+                    <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm text-sm text-slate-700 leading-relaxed">
+                        嗨！我是 Waiting 的 AI 助手 ✨<br>您可以問我關於他的經歷、技能，或是貼上您的 JD 讓我幫您分析匹配度喔！
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-3 bg-white border-t border-slate-100 shrink-0">
+                <form onsubmit="handleChatSubmit(event)" class="flex gap-2 relative">
+                    <input type="text" id="user-input" placeholder="輸入問題..." class="flex-1 bg-slate-100 border-transparent focus:bg-white border focus:border-brand-300 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-100 transition-all placeholder:text-slate-400">
+                    <button type="submit" class="w-10 h-10 bg-brand-600 hover:bg-brand-700 text-white rounded-full flex items-center justify-center transition shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95" id="send-btn">
+                        <i class="fas fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- FAB Button -->
+        <button onclick="toggleChat()" class="ai-fab w-14 h-14 bg-slate-900 hover:bg-brand-600 text-white rounded-full shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] flex items-center justify-center text-2xl transition-all duration-300 hover:scale-110 group z-50">
+            <i class="fas fa-sparkles group-hover:rotate-12 transition-transform"></i>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+        </button>
+    </div>
+
+    <!-- Certificate Modal (Lightbox) -->
+    <div id="cert-modal" class="fixed inset-0 z-[100] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4 sm:p-6" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-slate-900/80 transition-opacity" onclick="closeCertModal()"></div>
+
+        <!-- Modal Panel -->
+        <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all w-full max-w-5xl h-[90vh] md:h-auto md:max-h-[90vh] flex flex-col">
+            
+            <!-- Header -->
+            <div class="flex justify-between items-center p-4 border-b border-slate-100">
+                <h3 class="text-lg font-bold text-slate-800" id="modal-title">Certificate Preview</h3>
+                <button type="button" onclick="closeCertModal()" class="rounded-full w-8 h-8 bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 focus:outline-none transition flex items-center justify-center">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto bg-slate-50 p-4 flex justify-center items-center">
+                
+                <!-- Helper function to generate PDF container -->
+                <script>
+                    function getPdfTemplate(filename) {
+                        // Use encodeURI to ensure filenames with spaces/non-ASCII are safe in URLs
+                        const safeUrl = encodeURI(filename);
+                        return `
+                            <div class="w-full h-full min-h-[50vh] md:min-h-[70vh] bg-white shadow-lg border border-slate-200 relative overflow-hidden rounded-lg group">
+                                <iframe src="${safeUrl}#toolbar=0" 
+                                        type="application/pdf" 
+                                        width="100%" 
+                                        height="100%" 
+                                        class="relative z-10 w-full h-full opacity-0 transition-opacity duration-500 onload-fade-in"
+                                        onload="this.classList.remove('opacity-0')"
+                                        frameborder="0">
+                                </iframe>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center bg-white z-0">
+                                    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600 mb-3"></div>
+                                    <p class="text-slate-400 text-sm">Loading Preview...</p>
+                                    <p class="text-slate-300 text-xs mt-2">If it doesn't load, use the download button below.</p>
+                                </div>
+                            </div>
+                            <div class="mt-6 flex justify-center w-full">
+                                <a href="${safeUrl}" download class="inline-flex items-center px-6 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-full hover:bg-brand-600 shadow-lg hover:shadow-brand-500/30 transition transform hover:-translate-y-0.5" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-download mr-2"></i> Download PDF
+                                </a>
+                            </div>
+                        `;
+                    }
+                </script>
+
+                <!-- 104 Cert -->
+                <div id="cert-content-104" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
+                <!-- TOEIC Cert -->
+                <div id="cert-content-toeic" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
+                <!-- Google Cert -->
+                <div id="cert-content-google" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
+                <!-- Gemini Cert -->
+                <div id="cert-content-gemini" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Define featured jobs
+        const FEATURED_JOBS = ['hiwin', 'ntcu', 'youngstown', 'usi', 'yscd'];
+
+        // Scroll Progress Bar Logic
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+            
+            // Navbar blur effect on scroll
+            const navbar = document.getElementById("navbar");
+            if (winScroll > 50) {
+                navbar.classList.add("shadow-md");
+                navbar.classList.replace("h-20", "h-16");
+            } else {
+                navbar.classList.remove("shadow-md");
+                navbar.classList.replace("h-16", "h-20");
+            }
+        });
+
+        // Experience Tab Logic
+        function showJob(event, jobId) {
+            // 1. Hide all contents
+            document.querySelectorAll('.job-content-block').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('animate-fade-in');
+            });
+
+            // 2. Remove active state from all job items in the list
+            document.querySelectorAll('.job-item').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // 3. Show selected content
+            const content = document.getElementById('content-' + jobId);
+            if (content) {
+                content.classList.remove('hidden');
+                // Use a short timeout to re-trigger the fade-in animation
+                setTimeout(() => content.classList.add('animate-fade-in'), 10);
+            }
+
+            // 4. Set active state to clicked item
+            const item = event.currentTarget;
+            item.classList.add('active');
+            
+            // On mobile, scroll to content slightly
+            if(window.innerWidth < 768) {
+                const container = document.getElementById('job-content-pane');
+                if(container) {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        }
+
+        // Mode Switcher Logic
+        function switchExperienceMode(mode) {
+            const allItems = document.querySelectorAll('.job-item');
+            const modeFeatured = document.getElementById('mode-featured');
+            const modeAll = document.getElementById('mode-all');
+            const modeIndicator = document.getElementById('mode-indicator');
+            const allContentBlocks = document.querySelectorAll('.job-content-block');
+
+
+            // 1. Reset active button state
+            modeFeatured.classList.remove('active');
+            modeAll.classList.remove('active');
+            
+            let firstJobItemToShow = null;
+
+            // 2. Control visibility of list items
+            allItems.forEach(item => {
+                const category = item.getAttribute('data-category');
+                
+                // Hide all job list items initially
+                item.classList.add('hidden-mode');
+                item.classList.remove('active');
+
+
+                if (mode === 'featured') {
+                    if (FEATURED_JOBS.includes(item.id.replace('item-', ''))) {
+                         item.classList.remove('hidden-mode');
+                         if (firstJobItemToShow === null) {
+                            firstJobItemToShow = item;
+                         }
+                    }
+                } else if (mode === 'all') {
+                    item.classList.remove('hidden-mode');
+                    if (firstJobItemToShow === null) {
+                        firstJobItemToShow = item;
+                    }
+                }
+            });
+
+            // Set button active
+            if (mode === 'featured') {
+                modeFeatured.classList.add('active');
+                // move indicator to left
+                if(modeIndicator) modeIndicator.style.transform = 'translateX(0%)';
+                // small pulse effect (respect reduced motion)
+                if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    modeFeatured.classList.add('pulse');
+                    setTimeout(() => modeFeatured.classList.remove('pulse'), 420);
+                }
+                // announce for screen readers
+                const live = document.getElementById('mode-live'); if(live) live.textContent = '切換到 精選經歷';
+            } else if (mode === 'all') {
+                modeAll.classList.add('active');
+                // move indicator to right (100%)
+                if(modeIndicator) modeIndicator.style.transform = 'translateX(100%)';
+                if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    modeAll.classList.add('pulse');
+                    setTimeout(() => modeAll.classList.remove('pulse'), 420);
+                }
+                const live = document.getElementById('mode-live'); if(live) live.textContent = '切換到 全部經歷';
+            }
+            
+            // 3. Control visibility of content blocks (Right Pane)
+            allContentBlocks.forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('animate-fade-in');
+            });
+
+            // 4. Activate the first visible job's list item and content
+            if (firstJobItemToShow) {
+                const jobId = firstJobItemToShow.id.replace('item-', '');
+                
+                // Show content
+                const content = document.getElementById('content-' + jobId);
+                if (content) {
+                    content.classList.remove('hidden');
+                }
+                
+                // Activate list item
+                firstJobItemToShow.classList.add('active');
+
+                // Add entry animation to visible items with small stagger
+                let visibleIndex = 0;
+                allItems.forEach(item => {
+                    if (!item.classList.contains('hidden-mode')) {
+                        item.classList.add('enter');
+                        setTimeout(() => {
+                            item.classList.add('enter-active');
+                            item.classList.remove('enter');
+                            // cleanup after animation
+                            setTimeout(() => item.classList.remove('enter-active'), 500);
+                            // small bounce to show interaction (skip if reduced motion)
+                            if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                item.classList.add('job-bounce');
+                                setTimeout(() => item.classList.remove('job-bounce'), 520);
+                            }
+                        }, visibleIndex * 80 + 50);
+                        visibleIndex++;
+                    }
+                });
+            }
+        }
+
+
+        // Certificate Modal Logic
+        function openCertModal(certId) {
+            const modal = document.getElementById('cert-modal');
+            const contents = document.querySelectorAll('.cert-content');
+            
+            // Hide all contents first
+            contents.forEach(el => {
+                el.classList.add('hidden');
+                el.innerHTML = ''; // Clean up previous content
+            });
+            
+            // Determine filename based on ID
+            let filename = '';
+            let title = '';
+            if (certId === 'cert-104') {
+                // Use an ASCII-safe filename to avoid server/URL encoding issues
+                filename = '104-training-manager.pdf';
+                title = '104 訓練發展管理師證書';
+            } else if (certId === 'cert-toeic') {
+                filename = 'TOEIC750.pdf';
+                title = 'TOEIC 成績單';
+            } else if (certId === 'cert-google') {
+                filename = 'google-digital-marketing.pdf';
+                title = 'Google 數位行銷證書';
+            } else if (certId === 'cert-gemini') {
+                filename = 'Gemini Certified Educator.pdf';
+                title = 'Gemini Certified Educator';
+            }
+
+            // Set Title
+            document.getElementById('modal-title').innerText = title;
+
+            // Show specific content & inject HTML
+            const targetContent = document.getElementById('cert-content-' + certId.replace('cert-', ''));
+            if(targetContent) {
+                targetContent.classList.remove('hidden');
+                targetContent.innerHTML = getPdfTemplate(filename);
+            }
+
+            // Show Modal
+            modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        // CTA observer: add pulse when CTA comes into view to attract recruiter attention
+        (function watchCTA(){
+            const cta = document.getElementById('lets-cta');
+            if(!cta || !window.IntersectionObserver) return;
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        cta.classList.add('cta-pulse');
+                        setTimeout(() => cta.classList.remove('cta-pulse'), 1400);
+                    }
+                });
+            }, { threshold: 0.6 });
+            io.observe(cta);
+            // gentle initial pulse after short delay to draw attention
+            setTimeout(()=>{ if(cta) { cta.classList.add('cta-pulse'); setTimeout(()=>cta.classList.remove('cta-pulse'),1400); } }, 1200);
+        })();
+
+        function closeCertModal() {
+            const modal = document.getElementById('cert-modal');
+            modal.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = ''; // Restore scroll
+                // Clear content to stop iframes
+                document.querySelectorAll('.cert-content').forEach(el => el.innerHTML = '');
+            }, 300);
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeCertModal();
+            }
+        });
+
+        // Scroll Reveal Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+        
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Mobile Menu Logic
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        
+        function toggleMobileMenu() {
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.classList.remove('scale-y-0', 'opacity-0');
+                }, 10);
+            } else {
+                menu.classList.add('scale-y-0', 'opacity-0');
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                }, 300);
+            }
+        }
+        
+        btn.addEventListener('click', toggleMobileMenu);
+
+        // View More Toggle Logic
+        function toggleSection(sectionId, btnTextId, btnIconId, count) {
+            const section = document.getElementById(sectionId);
+            const textEl = document.getElementById(btnTextId);
+            const iconEl = document.getElementById(btnIconId);
+            
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                // Trigger reflow
+                void section.offsetWidth;
+                section.classList.add('animate-fade-in');
+                textEl.textContent = 'View Less';
+                iconEl.classList.remove('fa-chevron-down');
+                iconEl.classList.add('fa-chevron-up');
+            } else {
+                section.classList.add('hidden');
+                section.classList.remove('animate-fade-in');
+                textEl.textContent = `View More (${count})`;
+                iconEl.classList.remove('fa-chevron-up');
+                iconEl.classList.add('fa-chevron-down');
+            }
+        }
+
+        function toggleAwards() {
+            toggleSection('more-awards', 'view-more-text', 'view-more-icon', '7');
+        }
+
+        function toggleResearch() {
+            toggleSection('more-research', 'view-research-text', 'view-research-icon', '1');
+        }
+
+        // Initialize view on load
+        window.addEventListener('load', () => {
+            // Set initial mode to 'featured'
+            switchExperienceMode('featured');
+
+            // Birth date is rendered as static text in the HTML for clarity and reliability.
+        });
+
+
+        // --- AI Chatbot Logic ---
+        const apiKey = ""; // ⚠️ 重要：實際部署時請由後端或環境變數注入，或在此填入 Key
+        const chatWindow = document.getElementById('chat-window');
+        const messagesContainer = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        function toggleChat() {
+            chatWindow.classList.toggle('hidden');
+            if (!chatWindow.classList.contains('hidden')) {
+                setTimeout(() => chatWindow.classList.add('open'), 10);
+                userInput.focus();
+            } else {
+                chatWindow.classList.remove('open');
+            }
+        }
+
+        // Get page context for the AI
+        function getPageContext() {
+            const bodyText = document.body.innerText;
+            return bodyText.replace(/\s+/g, ' ').substring(0, 15000); // Increased limit context
+        }
+
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Check API Key
+            if (!apiKey) {
+                addMessage(message, 'user');
+                userInput.value = '';
+                addMessage("⚠️ 請注意：尚未設定 API Key。若您是開發者，請在程式碼中填入 Google Gemini API Key 才能啟用 AI 回覆功能。", 'ai');
+                return;
+            }
+
+            // Add User Message
+            addMessage(message, 'user');
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+
+            // Add Loading Indicator
+            const loadingId = addLoadingIndicator();
+
+            try {
+                const response = await callGemini(message);
+                    removeMessage(loadingId);
+                    addMessage(response, 'ai');
+                } catch (error) {
+                    console.error("Gemini Error:", error);
+                    removeMessage(loadingId);
+                    addMessage("抱歉，我現在有點忙不過來，請稍後再試一次。", 'ai');
+                } finally {
+                    userInput.disabled = false;
+                    sendBtn.disabled = false;
+                    userInput.focus();
+                }
+            }
+        
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = `flex gap-3 ${sender === 'user' ? 'flex-row-reverse' : 'animate-fade-in'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold border ${sender === 'ai' ? 'bg-brand-100 text-brand-600 border-brand-200' : 'bg-slate-200 text-slate-600 border-slate-300'}`;
+            avatar.innerHTML = sender === 'ai' ? 'AI' : '<i class="fas fa-user"></i>';
+            
+            const bubble = document.createElement('div');
+            bubble.className = `p-3 rounded-2xl shadow-sm text-sm max-w-[85%] leading-relaxed ${
+                sender === 'ai' 
+                ? 'bg-white border border-slate-200 text-slate-700 rounded-tl-none prose prose-sm prose-slate' 
+                : 'bg-brand-600 border border-brand-600 text-white rounded-tr-none'
+            }`;
+            
+            // Using standard Markdown processing for safety
+            bubble.innerHTML = sender === 'ai' ? marked.parse(text) : text;
+
+            div.appendChild(avatar);
+            div.appendChild(bubble);
+            messagesContainer.appendChild(div);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addLoadingIndicator() {
+            const id = 'loading-' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'flex gap-3 animate-pulse';
+            div.innerHTML = `
+                <div class="w-8 h-8 bg-brand-100 rounded-full flex-shrink-0 flex items-center justify-center text-brand-600 text-xs font-bold border border-brand-200">AI</div>
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm text-sm text-slate-700 typing-indicator flex items-center h-10">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            messagesContainer.appendChild(div);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return id;
+        }
+
+        function removeMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        async function callGemini(userQuery) {
+            const context = getPageContext();
+            const systemPrompt = `
+                你是一個專業、熱情且有幫助的 AI 助手，專門為 Waiting (陳薇婷) 的個人作品集網站服務。
+                你的任務是根據網站內容回答訪客關於 Waiting 的問題。
+                網站內容如下：
+                ${context}
+                
+                回答守則：
+                1. 語氣保持專業、自信且親切，展現 30 年經驗全端工程師設計的作品質感。
+                2. 根據提供的網站內容事實回答，不要編造經歷。
+                3. 如果訪客詢問職缺匹配，請分析 Waiting 的技能 (Vyond, Gen-AI, 專案管理) 如何符合該職位。
+                4. 使用繁體中文回答。
+                5. 回答請簡潔明瞭，善用 Markdown 格式 (如條列式、粗體) 優化閱讀體驗。
+            `;
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{
+                    parts: [{ text: userQuery }]
+                }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            for (let i = 0; i < 3; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                    
+                    const data = await response.json();
+                    return data.candidates[0].content.parts[0].text;
+                } catch (e) {
+                    if (i === 2) throw e;
+                    await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i))); 
+                }
+            }
+        }
+    </script>
+</body>
+</html>
