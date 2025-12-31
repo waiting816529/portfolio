@@ -1763,13 +1763,29 @@
                     appendMessage('ai', reply);
                 } else {
                     console.error('API Error:', data);
-                    appendMessage('ai', '抱歉，分析過程中發生錯誤，請稍後再試。');
+                    let errorMsg = '抱歉，分析過程中發生錯誤。';
+                    
+                    // Specific Error Handling
+                    if (data.error) {
+                        errorMsg += '<br><br><small class="text-red-500">';
+                        errorMsg += '<strong>Error Code:</strong> ' + data.error.code + '<br>';
+                        errorMsg += '<strong>Message:</strong> ' + data.error.message;
+                        errorMsg += '</small>';
+                        
+                        if (data.error.message.includes('API key not valid')) {
+                            errorMsg += '<br><br>⚠️ <strong>原因：</strong>API Key 無效或被刪除。';
+                        } else if (data.error.message.includes('Requests from referer')) {
+                            errorMsg += '<br><br>⚠️ <strong>原因：</strong>網站限制 (Referrer) 設定未生效或網址不符。<br>請檢查 Google Cloud Console 設定。';
+                        }
+                    }
+                    
+                    appendMessage('ai', errorMsg);
                 }
 
             } catch (error) {
                 console.error('Fetch Error:', error);
                 document.getElementById(loadingId)?.remove();
-                appendMessage('ai', '連線失敗，請檢查網路或 API Key 設定。');
+                appendMessage('ai', '連線失敗：' + error.message);
             } finally {
                 isAnalyzing = false;
                 btnEl.disabled = false;
