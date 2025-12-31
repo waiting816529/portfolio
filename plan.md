@@ -1,3 +1,23 @@
+# 任務計畫 - 新增 AI 履歷分析小助手
+
+## 需求
+在網站右下角新增一個 AI 聊天小助手，讓 HR 貼上 JD (職缺描述) 後，自動分析與 Waiting 履歷的適配度。
+
+## 執行步驟
+1. [ ] 申請 Google Gemini API Key (需由使用者自行執行並設定網域限制)。
+2. [x] 修改 `index.html`：
+    - 新增懸浮按鈕 (Floating Action Button) 與聊天視窗 (Chat Window) 的 UI。
+    - 撰寫 JavaScript 邏輯：
+        - `getResumeContent()`: 自動抓取網頁上的經歷與技能文字。
+        - `callGeminiAPI(jdText)`: 呼叫 Gemini 1.5 Flash 模型進行分析。
+        - **資安機制**: 程式碼中將預留 `YOUR_API_KEY` 欄位，並加上註解指導使用者設定 HTTP Referrer 限制。
+3. [x] 驗證 UI 互動與 API 串接流程。
+
+## 技術決策
+- **Model**: Gemini 1.5 Flash (速度快、免費額度高)。
+- **Security**: 依賴 Google Cloud 的 HTTP Referrer 限制 (Client-side 唯一解法)。
+- **Context**: 動態抓取 DOM 文字，確保分析內容與網頁呈現一致。
+
 # 任務計畫 - SEO 與 GEO 優化 (曝光度提升)
 
 ## 需求
