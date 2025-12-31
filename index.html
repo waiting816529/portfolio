@@ -34,6 +34,45 @@
     <!-- Marked.js for Markdown rendering (Added for stability) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+    <!-- JSON-LD Structured Data for GEO (Generative Engine Optimization) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "陳薇婷",
+      "alternateName": "Waiting Chen",
+      "jobTitle": "教育訓練管理師 (Training Specialist)",
+      "url": "https://waiting816529.github.io/portfolio/",
+      "image": "https://waiting816529.github.io/portfolio/portrait.jpg",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "上銀科技 (HIWIN)",
+        "url": "https://www.hiwin.tw/"
+      },
+      "alumniOf": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "國立嘉義大學",
+          "department": "數位學習設計與管理學系 (碩士)"
+        }
+      ],
+      "knowsAbout": [
+        "Instructional Design (數位教材設計)",
+        "EdTech (教育科技)",
+        "Gen-AI Application (生成式 AI 應用)",
+        "Human Resource Development (人力資源發展)",
+        "Project Management (專案管理)",
+        "Adobe Creative Cloud",
+        "Vyond"
+      ],
+      "sameAs": [
+        "https://www.behance.net/65ea2072",
+        "https://youtube.com/playlist?list=PLHKsntqbB3CuqYpFCTp14n_MpAaJWVKNd&si=rYCfEK5Ar9rZy_TO",
+        "mailto:waiting816529@gmail.com"
+      ]
+    }
+    </script>
+
     <script>
         // 定義配置物件
         const portfolioConfig = {
@@ -55,7 +94,7 @@
                         },
                         tech: {
                             dark: '#0f172a', // Slate 900
-                            gray: '#64748b', // Slate 500
+                            gray: '#64748b'  // Slate 500
                         }
                     },
                     boxShadow: {
@@ -460,7 +499,7 @@
                             </div>
                             <div>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider leading-none mb-1">Education</p>
-                                <p class="text-sm font-bold text-slate-700 leading-tight">國立嘉義大學 碩士<span class="block text-xs font-normal text-slate-500 mt-0.5">數位學習設計與管理學系</span></p>
+                                <p class="text-sm font-bold text-slate-700 leading-tight">國立嘉義大學 <span class="block text-xs font-normal text-slate-500 mt-0.5">數位學習設計與管理學系 碩士</span></p>
                             </div>
                         </div>
                     </div>
@@ -1196,8 +1235,386 @@
         </div>
     </div>
 
-    <!-- AI Logic Script -->
+    <!-- Certificate Modal (Lightbox) -->
+    <div id="cert-modal" class="fixed inset-0 z-[100] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4 sm:p-6" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-slate-900/80 transition-opacity" onclick="closeCertModal()"></div>
+
+        <!-- Modal Panel -->
+        <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all w-full max-w-5xl h-[90vh] md:h-auto md:max-h-[90vh] flex flex-col">
+            
+            <!-- Header -->
+            <div class="flex justify-between items-center p-4 border-b border-slate-100">
+                <h3 class="text-lg font-bold text-slate-800" id="modal-title">Certificate Preview</h3>
+                <button type="button" onclick="closeCertModal()" class="rounded-full w-8 h-8 bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 focus:outline-none transition flex items-center justify-center">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto bg-slate-50 p-4 flex justify-center items-center">
+                
+                <!-- Helper function to generate PDF container -->
+                <script>
+                    function getPdfTemplate(filename) {
+                        // Use encodeURI to ensure filenames with spaces/non-ASCII are safe in URLs
+                        const safeUrl = encodeURI(filename);
+                        return `
+                            <div class="w-full h-full min-h-[50vh] md:min-h-[70vh] bg-white shadow-lg border border-slate-200 relative overflow-hidden rounded-lg group">
+                                <iframe src="${safeUrl}#toolbar=0" 
+                                        type="application/pdf" 
+                                        width="100%" 
+                                        height="100%" 
+                                        class="relative z-10 w-full h-full opacity-0 transition-opacity duration-500 onload-fade-in"
+                                        onload="this.classList.remove('opacity-0')"
+                                        frameborder="0">
+                                </iframe>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center bg-white z-0">
+                                    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600 mb-3"></div>
+                                    <p class="text-slate-400 text-sm">Loading Preview...</p>
+                                    <p class="text-slate-300 text-xs mt-2">If it doesn't load, use the download button below.</p>
+                                </div>
+                            </div>
+                            <div class="mt-6 flex justify-center w-full">
+                                <a href="${safeUrl}" download class="inline-flex items-center px-6 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-full hover:bg-brand-600 shadow-lg hover:shadow-brand-500/30 transition transform hover:-translate-y-0.5" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-download mr-2"></i> Download PDF
+                                </a>
+                            </div>
+                        `;
+                    }
+                </script>
+
+                <!-- 104 Cert -->
+                <div id="cert-content-104" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
+                <!-- TOEIC Cert -->
+                <div id="cert-content-toeic" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
+                <!-- Google Cert -->
+                <div id="cert-content-google" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
+                <!-- Gemini Cert -->
+                <div id="cert-content-gemini" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script>
+        // Define featured jobs
+        const FEATURED_JOBS = ['hiwin', 'ntcu', 'youngstown', 'usi', 'yscd'];
+
+        // Scroll Progress Bar Logic
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%”;
+            
+            // Navbar blur effect on scroll
+            const navbar = document.getElementById("navbar");
+            if (winScroll > 50) {
+                navbar.classList.add("shadow-md");
+                navbar.classList.replace("h-20", "h-16");
+            } else {
+                navbar.classList.remove("shadow-md");
+                navbar.classList.replace("h-16", "h-20");
+            }
+        });
+
+        // Experience Tab Logic
+        function showJob(event, jobId) {
+            // 1. Hide all contents
+            document.querySelectorAll('.job-content-block').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('animate-fade-in');
+            });
+
+            // 2. Remove active state from all job items in the list
+            document.querySelectorAll('.job-item').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // 3. Show selected content
+            const content = document.getElementById('content-' + jobId);
+            if (content) {
+                content.classList.remove('hidden');
+                // Use a short timeout to re-trigger the fade-in animation
+                setTimeout(() => content.classList.add('animate-fade-in'), 10);
+            }
+
+            // 4. Set active state to clicked item
+            const item = event.currentTarget;
+            item.classList.add('active');
+            
+            // On mobile, scroll to content slightly
+            if(window.innerWidth <768) {
+                const container = document.getElementById('job-content-pane');
+                if(container) {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        }
+
+        // Mode Switcher Logic
+        function switchExperienceMode(mode) {
+            const allItems = document.querySelectorAll('.job-item');
+            const modeFeatured = document.getElementById('mode-featured');
+            const modeAll = document.getElementById('mode-all');
+            const modeIndicator = document.getElementById('mode-indicator');
+            const allContentBlocks = document.querySelectorAll('.job-content-block');
+
+
+            // 1. Reset active button state
+            modeFeatured.classList.remove('active');
+            modeAll.classList.remove('active');
+            
+            let firstJobItemToShow = null;
+
+            // 2. Control visibility of list items
+            allItems.forEach(item => {
+                const category = item.getAttribute('data-category');
+                
+                // Hide all job list items initially
+                item.classList.add('hidden-mode');
+                item.classList.remove('active');
+
+
+                if (mode === 'featured') {
+                    if (FEATURED_JOBS.includes(item.id.replace('item-', ''))) {
+                         item.classList.remove('hidden-mode');
+                         if (firstJobItemToShow === null) {
+                            firstJobItemToShow = item;
+                         }
+                    }
+                } else if (mode === 'all') {
+                    item.classList.remove('hidden-mode');
+                    if (firstJobItemToShow === null) {
+                        firstJobItemToShow = item;
+                    }
+                }
+            });
+
+            // Set button active
+            if (mode === 'featured') {
+                modeFeatured.classList.add('active');
+                // move indicator to left
+                if(modeIndicator) modeIndicator.style.transform = 'translateX(0%)';
+                // small pulse effect (respect reduced motion)
+                if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    modeFeatured.classList.add('pulse');
+                    setTimeout(() => modeFeatured.classList.remove('pulse'), 420);
+                }
+                // announce for screen readers
+                const live = document.getElementById('mode-live'); if(live) live.textContent = '切換到 精選經歷';
+            } else if (mode === 'all') {
+                modeAll.classList.add('active');
+                // move indicator to right (100%)
+                if(modeIndicator) modeIndicator.style.transform = 'translateX(100%)';
+                if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    modeAll.classList.add('pulse');
+                    setTimeout(() => modeAll.classList.remove('pulse'), 420);
+                }
+                const live = document.getElementById('mode-live'); if(live) live.textContent = '切換到 全部經歷';
+            }
+            
+            // 3. Control visibility of content blocks (Right Pane)
+            allContentBlocks.forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('animate-fade-in');
+            });
+
+            // 4. Activate the first visible job's list item and content
+            if (firstJobItemToShow) {
+                const jobId = firstJobItemToShow.id.replace('item-', '');
+                
+                // Show content
+                const content = document.getElementById('content-' + jobId);
+                if (content) {
+                    content.classList.remove('hidden');
+                }
+                
+                // Activate list item
+                firstJobItemToShow.classList.add('active');
+
+                // Add entry animation to visible items with small stagger
+                let visibleIndex = 0;
+                allItems.forEach(item => {
+                    if (!item.classList.contains('hidden-mode')) {
+                        item.classList.add('enter');
+                        setTimeout(() => {
+                            item.classList.add('enter-active');
+                            item.classList.remove('enter');
+                            // cleanup after animation
+                            setTimeout(() => item.classList.remove('enter-active'), 500);
+                            // small bounce to show interaction (skip if reduced motion)
+                            if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                                item.classList.add('job-bounce');
+                                setTimeout(() => item.classList.remove('job-bounce'), 520);
+                            }
+                        }, visibleIndex * 80 + 50);
+                        visibleIndex++;
+                    }
+                });
+            }
+        }
+
+
+        // Certificate Modal Logic
+        function openCertModal(certId) {
+            const modal = document.getElementById('cert-modal');
+            const contents = document.querySelectorAll('.cert-content');
+            
+            // Hide all contents first
+            contents.forEach(el => {
+                el.classList.add('hidden');
+                el.innerHTML = ''; // Clean up previous content
+            });
+            
+            // Determine filename based on ID
+            let filename = '';
+            let title = '';
+            if (certId === 'cert-104') {
+                // Use an ASCII-safe filename to avoid server/URL encoding issues
+                filename = '104-training-manager.pdf';
+                title = '104 訓練發展管理師證書';
+            } else if (certId === 'cert-toeic') {
+                filename = 'TOEIC750.pdf';
+                title = 'TOEIC 成績單';
+            } else if (certId === 'cert-google') {
+                filename = 'google-digital-marketing.pdf';
+                title = 'Google 數位行銷證書';
+            } else if (certId === 'cert-gemini') {
+                filename = 'Gemini Certified Educator.pdf';
+                title = 'Gemini Certified Educator';
+            }
+
+            // Set Title
+            document.getElementById('modal-title').innerText = title;
+
+            // Show specific content & inject HTML
+            const targetContent = document.getElementById('cert-content-' + certId.replace('cert-', ''));
+            if(targetContent) {
+                targetContent.classList.remove('hidden');
+                targetContent.innerHTML = getPdfTemplate(filename);
+            }
+
+            // Show Modal
+            modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        // CTA observer: add pulse when CTA comes into view to attract recruiter attention
+        (function watchCTA(){
+            const cta = document.getElementById('lets-cta');
+            if(!cta || !window.IntersectionObserver) return;
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        cta.classList.add('cta-pulse');
+                        setTimeout(() => cta.classList.remove('cta-pulse'), 1400);
+                    }
+                });
+            }, { threshold: 0.6 });
+            io.observe(cta);
+            // gentle initial pulse after short delay to draw attention
+            setTimeout(()=>{ if(cta) { cta.classList.add('cta-pulse'); setTimeout(()=>cta.classList.remove('cta-pulse'),1400); } }, 1200);
+        })();
+
+        function closeCertModal() {
+            const modal = document.getElementById('cert-modal');
+            modal.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = ''; // Restore scroll
+                // Clear content to stop iframes
+                document.querySelectorAll('.cert-content').forEach(el => el.innerHTML = '');
+            }, 300);
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeCertModal();
+            }
+        });
+
+        // Scroll Reveal Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+        
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Mobile Menu Logic
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        
+        function toggleMobileMenu() {
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.classList.remove('scale-y-0', 'opacity-0');
+                }, 10);
+            } else {
+                menu.classList.add('scale-y-0', 'opacity-0');
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                }, 300);
+            }
+        }
+        
+        btn.addEventListener('click', toggleMobileMenu);
+
+        // View More Toggle Logic
+        function toggleSection(sectionId, btnTextId, btnIconId, count) {
+            const section = document.getElementById(sectionId);
+            const textEl = document.getElementById(btnTextId);
+            const iconEl = document.getElementById(btnIconId);
+            
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                // Trigger reflow
+                void section.offsetWidth;
+                section.classList.add('animate-fade-in');
+                textEl.textContent = 'View Less';
+                iconEl.classList.remove('fa-chevron-down');
+                iconEl.classList.add('fa-chevron-up');
+            } else {
+                section.classList.add('hidden');
+                section.classList.remove('animate-fade-in');
+                textEl.textContent = `View More (${count})`;
+                iconEl.classList.remove('fa-chevron-up');
+                iconEl.classList.add('fa-chevron-down');
+            }
+        }
+
+        function toggleAwards() {
+            toggleSection('more-awards', 'view-more-text', 'view-more-icon', '7');
+        }
+
+        function toggleResearch() {
+            toggleSection('more-research', 'view-research-text', 'view-research-icon', '1');
+        }
+
+        // Initialize view on load
+        window.addEventListener('load', () => {
+            // Set initial mode to 'featured'
+            switchExperienceMode('featured');
+
+            // Birth date is rendered as static text in the HTML for clarity and reliability.
+        });
+
+        // AI Logic Script
         // 1. Configuration
         // IMPORTANT: Replace with your actual Gemini API Key from Google AI Studio.
         // SECURITY: Go to Google Cloud Console -> APIs & Services -> Credentials.
@@ -1368,5 +1785,6 @@
             }
         });
     </script>
+    <!-- Last Updated: 2025-12-21 17:40 - AI Removed -->
 </body>
 </html>
