@@ -1621,8 +1621,8 @@
         // Create an API Key and set 'Application restrictions' to 'HTTP referrers'.
         // Add 'https://waiting816529.github.io/*' to the list.
         const GEMINI_API_KEY = 'AIzaSyBF3B8fh8lItHM_ZxzR8FrEWwHFs-91gt8'; 
-        // Use gemini-2.0-flash as confirmed by user's ListModels
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // Use gemini-1.5-flash for maximum free tier stability
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
         // 2. State Management
         let isChatOpen = false;
