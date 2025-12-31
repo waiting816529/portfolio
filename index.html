@@ -1141,387 +1141,232 @@
 
 
 
-    <!-- Certificate Modal (Lightbox) -->
-    <div id="cert-modal" class="fixed inset-0 z-[100] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4 sm:p-6" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-slate-900/80 transition-opacity" onclick="closeCertModal()"></div>
+    <!-- AI Resume Assistant Widget -->
+    <!-- 1. Floating Action Button -->
+    <button id="ai-fab" onclick="toggleChat()" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-brand-600 text-white rounded-full shadow-lg hover:bg-brand-500 hover:scale-110 transition-all duration-300 flex items-center justify-center group" aria-label="AI 履歷分析助手">
+        <i class="fas fa-robot text-2xl group-hover:rotate-12 transition-transform"></i>
+        <span class="absolute right-full mr-4 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            試試 AI 履歷適配度分析
+        </span>
+        <!-- Notification Dot -->
+        <span class="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full animate-bounce"></span>
+    </button>
 
-        <!-- Modal Panel -->
-        <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all w-full max-w-5xl h-[90vh] md:h-auto md:max-h-[90vh] flex flex-col">
-            
-            <!-- Header -->
-            <div class="flex justify-between items-center p-4 border-b border-slate-100">
-                <h3 class="text-lg font-bold text-slate-800" id="modal-title">Certificate Preview</h3>
-                <button type="button" onclick="closeCertModal()" class="rounded-full w-8 h-8 bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 focus:outline-none transition flex items-center justify-center">
-                    <i class="fas fa-times"></i>
+    <!-- 2. Chat Window -->
+    <div id="ai-chat-window" class="fixed bottom-24 right-6 z-50 w-[90vw] max-w-[380px] h-[500px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right transform scale-0 opacity-0">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-brand-600 to-brand-500 p-4 flex justify-between items-center text-white">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    <i class="fas fa-robot text-sm"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm">Waiting's AI Assistant</h3>
+                    <p class="text-[10px] text-brand-100">Powered by Gemini 1.5</p>
+                </div>
+            </div>
+            <button onclick="toggleChat()" class="text-white/80 hover:text-white hover:bg-white/10 rounded-full w-8 h-8 flex items-center justify-center transition">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Chat Body -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 bg-slate-50 space-y-4 text-sm scroll-smooth">
+            <!-- Welcome Message -->
+            <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 shrink-0 text-xs">AI</div>
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 text-slate-600">
+                    <p>哈囉！我是 Waiting 的 AI 履歷助手 👋</p>
+                    <p class="mt-2">請貼上您的 <strong>Job Description (職缺描述)</strong>，我將為您分析 Waiting 的履歷與該職位的適配度！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-4 bg-white border-t border-slate-100">
+            <div class="relative">
+                <textarea id="jd-input" rows="3" placeholder="請在此貼上職缺內容..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 resize-none pr-12 scrollbar-hide"></textarea>
+                <button onclick="analyzeFit()" id="send-btn" class="absolute bottom-3 right-3 w-8 h-8 bg-brand-600 text-white rounded-lg hover:bg-brand-500 flex items-center justify-center shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition">
+                    <i class="fas fa-paper-plane text-xs"></i>
                 </button>
             </div>
-
-            <!-- Content -->
-            <div class="flex-1 overflow-y-auto bg-slate-50 p-4 flex justify-center items-center">
-                
-                <!-- Helper function to generate PDF container -->
-                <script>
-                    function getPdfTemplate(filename) {
-                        // Use encodeURI to ensure filenames with spaces/non-ASCII are safe in URLs
-                        const safeUrl = encodeURI(filename);
-                        return `
-                            <div class="w-full h-full min-h-[50vh] md:min-h-[70vh] bg-white shadow-lg border border-slate-200 relative overflow-hidden rounded-lg group">
-                                <iframe src="${safeUrl}#toolbar=0" 
-                                        type="application/pdf" 
-                                        width="100%" 
-                                        height="100%" 
-                                        class="relative z-10 w-full h-full opacity-0 transition-opacity duration-500 onload-fade-in"
-                                        onload="this.classList.remove('opacity-0')"
-                                        frameborder="0">
-                                </iframe>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center bg-white z-0">
-                                    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600 mb-3"></div>
-                                    <p class="text-slate-400 text-sm">Loading Preview...</p>
-                                    <p class="text-slate-300 text-xs mt-2">If it doesn't load, use the download button below.</p>
-                                </div>
-                            </div>
-                            <div class="mt-6 flex justify-center w-full">
-                                <a href="${safeUrl}" download class="inline-flex items-center px-6 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-full hover:bg-brand-600 shadow-lg hover:shadow-brand-500/30 transition transform hover:-translate-y-0.5" target="_blank" rel="noopener noreferrer">
-                                    <i class="fas fa-download mr-2"></i> Download PDF
-                                </a>
-                            </div>
-                        `;
-                    }
-                </script>
-
-                <!-- 104 Cert -->
-                <div id="cert-content-104" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
-                <!-- TOEIC Cert -->
-                <div id="cert-content-toeic" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
-                <!-- Google Cert -->
-                <div id="cert-content-google" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
-                <!-- Gemini Cert -->
-                <div id="cert-content-gemini" class="cert-content hidden w-full h-full flex flex-col items-center max-w-3xl"></div>
-            </div>
+            <p class="text-[10px] text-slate-400 text-center mt-2">
+                * 此分析由 AI 生成，僅供參考。
+            </p>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- AI Logic Script -->
     <script>
-        // Define featured jobs
-        const FEATURED_JOBS = ['hiwin', 'ntcu', 'youngstown', 'usi', 'yscd'];
+        // 1. Configuration
+        // IMPORTANT: Replace with your actual Gemini API Key from Google AI Studio.
+        // SECURITY: Go to Google Cloud Console -> APIs & Services -> Credentials.
+        // Create an API Key and set 'Application restrictions' to 'HTTP referrers'.
+        // Add 'https://waiting816529.github.io/*' to the list.
+        const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY'; 
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-        // Scroll Progress Bar Logic
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById("scroll-progress").style.width = scrolled + "%";
-            
-            // Navbar blur effect on scroll
-            const navbar = document.getElementById("navbar");
-            if (winScroll > 50) {
-                navbar.classList.add("shadow-md");
-                navbar.classList.replace("h-20", "h-16");
+        // 2. State Management
+        let isChatOpen = false;
+        let isAnalyzing = false;
+
+        // 3. UI Functions
+        function toggleChat() {
+            const chatWindow = document.getElementById('ai-chat-window');
+            const fab = document.getElementById('ai-fab');
+            isChatOpen = !isChatOpen;
+
+            if (isChatOpen) {
+                chatWindow.classList.remove('scale-0', 'opacity-0');
+                fab.classList.add('scale-0'); // Hide FAB when open
             } else {
-                navbar.classList.remove("shadow-md");
-                navbar.classList.replace("h-16", "h-20");
-            }
-        });
-
-        // Experience Tab Logic
-        function showJob(event, jobId) {
-            // 1. Hide all contents
-            document.querySelectorAll('.job-content-block').forEach(el => {
-                el.classList.add('hidden');
-                el.classList.remove('animate-fade-in');
-            });
-
-            // 2. Remove active state from all job items in the list
-            document.querySelectorAll('.job-item').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            // 3. Show selected content
-            const content = document.getElementById('content-' + jobId);
-            if (content) {
-                content.classList.remove('hidden');
-                // Use a short timeout to re-trigger the fade-in animation
-                setTimeout(() => content.classList.add('animate-fade-in'), 10);
-            }
-
-            // 4. Set active state to clicked item
-            const item = event.currentTarget;
-            item.classList.add('active');
-            
-            // On mobile, scroll to content slightly
-            if(window.innerWidth < 768) {
-                const container = document.getElementById('job-content-pane');
-                if(container) {
-                    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
+                chatWindow.classList.add('scale-0', 'opacity-0');
+                fab.classList.remove('scale-0');
             }
         }
 
-        // Mode Switcher Logic
-        function switchExperienceMode(mode) {
-            const allItems = document.querySelectorAll('.job-item');
-            const modeFeatured = document.getElementById('mode-featured');
-            const modeAll = document.getElementById('mode-all');
-            const modeIndicator = document.getElementById('mode-indicator');
-            const allContentBlocks = document.querySelectorAll('.job-content-block');
-
-
-            // 1. Reset active button state
-            modeFeatured.classList.remove('active');
-            modeAll.classList.remove('active');
+        function appendMessage(role, text) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = 'flex gap-3 ' + (role === 'user' ? 'flex-row-reverse' : '');
             
-            let firstJobItemToShow = null;
+            const avatar = role === 'ai' 
+                ? '<div class="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 shrink-0 text-xs">AI</div>'
+                : '<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 shrink-0 text-xs"><i class="fas fa-user"></i></div>';
+            
+            const bubbleStyle = role === 'ai'
+                ? 'bg-white text-slate-600 rounded-tl-none border-slate-100'
+                : 'bg-brand-600 text-white rounded-tr-none border-brand-600';
 
-            // 2. Control visibility of list items
-            allItems.forEach(item => {
-                const category = item.getAttribute('data-category');
-                
-                // Hide all job list items initially
-                item.classList.add('hidden-mode');
-                item.classList.remove('active');
+            // Parse Markdown-like simple formatting
+            const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 
+            div.innerHTML = `
+                ${avatar}
+                <div class="${bubbleStyle} p-3 rounded-2xl shadow-sm border text-justify max-w-[85%]">
+                    <p>${formattedText}</p>
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
 
-                if (mode === 'featured') {
-                    if (FEATURED_JOBS.includes(item.id.replace('item-', ''))) {
-                         item.classList.remove('hidden-mode');
-                         if (firstJobItemToShow === null) {
-                            firstJobItemToShow = item;
-                         }
-                    }
-                } else if (mode === 'all') {
-                    item.classList.remove('hidden-mode');
-                    if (firstJobItemToShow === null) {
-                        firstJobItemToShow = item;
-                    }
-                }
-            });
+        // 4. Core Logic: Extract Resume Content
+        function getResumeContent() {
+            // Extract text from specific sections to keep context focused
+            const about = document.getElementById('about')?.innerText || '';
+            const experience = document.getElementById('experience')?.innerText || '';
+            // Clean up excessive whitespace
+            return `
+                Name: Waiting Chen (陳薇婷)
+                About: ${about.replace(/\s+/g, ' ').slice(0, 500)}...
+                Experience: ${experience.replace(/\s+/g, ' ').slice(0, 1500)}...
+                Skills: Adobe Premiere, After Effects, Illustrator, Canva, Vyond, Instructional Design, Project Management.
+                Education: National Chiayi University, Master of Dept. of E-Learning Design and Management.
+            `;
+        }
 
-            // Set button active
-            if (mode === 'featured') {
-                modeFeatured.classList.add('active');
-                // move indicator to left
-                if(modeIndicator) modeIndicator.style.transform = 'translateX(0%)';
-                // small pulse effect (respect reduced motion)
-                if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    modeFeatured.classList.add('pulse');
-                    setTimeout(() => modeFeatured.classList.remove('pulse'), 420);
-                }
-                // announce for screen readers
-                const live = document.getElementById('mode-live'); if(live) live.textContent = '切換到 精選經歷';
-            } else if (mode === 'all') {
-                modeAll.classList.add('active');
-                // move indicator to right (100%)
-                if(modeIndicator) modeIndicator.style.transform = 'translateX(100%)';
-                if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    modeAll.classList.add('pulse');
-                    setTimeout(() => modeAll.classList.remove('pulse'), 420);
-                }
-                const live = document.getElementById('mode-live'); if(live) live.textContent = '切換到 全部經歷';
+        // 5. Core Logic: Call Gemini API
+        async function analyzeFit() {
+            const inputEl = document.getElementById('jd-input');
+            const btnEl = document.getElementById('send-btn');
+            const jdText = inputEl.value.trim();
+
+            if (!jdText) return;
+            if (isAnalyzing) return;
+
+            // Check if API Key is set
+            if (GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY') {
+                appendMessage('user', jdText);
+                appendMessage('ai', '⚠️ 請先設定 API Key！\n請開啟 index.html 搜尋 "GEMINI_API_KEY" 並填入您的 Google Gemini API 金鑰。');
+                inputEl.value = '';
+                return;
             }
+
+            // UI State: Loading
+            isAnalyzing = true;
+            btnEl.disabled = true;
+            btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            appendMessage('user', jdText);
+            inputEl.value = '';
             
-            // 3. Control visibility of content blocks (Right Pane)
-            allContentBlocks.forEach(content => {
-                content.classList.add('hidden');
-                content.classList.remove('animate-fade-in');
-            });
+            // Loading bubble
+            const loadingId = 'loading-' + Date.now();
+            const container = document.getElementById('chat-messages');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = loadingId;
+            loadingDiv.className = 'flex gap-3';
+            loadingDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 shrink-0 text-xs">AI</div>
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 flex gap-1 items-center">
+                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
+                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
+                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                </div>
+            `;
+            container.appendChild(loadingDiv);
+            container.scrollTop = container.scrollHeight;
 
-            // 4. Activate the first visible job's list item and content
-            if (firstJobItemToShow) {
-                const jobId = firstJobItemToShow.id.replace('item-', '');
-                
-                // Show content
-                const content = document.getElementById('content-' + jobId);
-                if (content) {
-                    content.classList.remove('hidden');
-                }
-                
-                // Activate list item
-                firstJobItemToShow.classList.add('active');
+            try {
+                const resumeContext = getResumeContent();
+                const prompt = `
+                    Role: You are an expert HR Consultant. 
+                    Task: Analyze the fit between Waiting Chen's resume and the provided Job Description (JD).
+                    
+                    RESUME:
+                    ${resumeContext}
+                    
+                    JOB DESCRIPTION:
+                    ${jdText}
+                    
+                    Output Requirements:
+                    1. Give a Match Score (0-100%).
+                    2. List 3 Key Strengths (Why Waiting is a good fit).
+                    3. List 1 Potential Gap (If any).
+                    4. Short Recommendation (1-2 sentences).
+                    
+                    Format: Use simple text with **bold** for emphasis. Keep it concise (under 200 words). Reply in Traditional Chinese (繁體中文).
+                `;
 
-                // Add entry animation to visible items with small stagger
-                let visibleIndex = 0;
-                allItems.forEach(item => {
-                    if (!item.classList.contains('hidden-mode')) {
-                        item.classList.add('enter');
-                        setTimeout(() => {
-                            item.classList.add('enter-active');
-                            item.classList.remove('enter');
-                            // cleanup after animation
-                            setTimeout(() => item.classList.remove('enter-active'), 500);
-                            // small bounce to show interaction (skip if reduced motion)
-                            if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                                item.classList.add('job-bounce');
-                                setTimeout(() => item.classList.remove('job-bounce'), 520);
-                            }
-                        }, visibleIndex * 80 + 50);
-                        visibleIndex++;
-                    }
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
                 });
-            }
-        }
 
+                const data = await response.json();
+                
+                // Remove loading bubble
+                document.getElementById(loadingId).remove();
 
-        // Certificate Modal Logic
-        function openCertModal(certId) {
-            const modal = document.getElementById('cert-modal');
-            const contents = document.querySelectorAll('.cert-content');
-            
-            // Hide all contents first
-            contents.forEach(el => {
-                el.classList.add('hidden');
-                el.innerHTML = ''; // Clean up previous content
-            });
-            
-            // Determine filename based on ID
-            let filename = '';
-            let title = '';
-            if (certId === 'cert-104') {
-                // Use an ASCII-safe filename to avoid server/URL encoding issues
-                filename = '104-training-manager.pdf';
-                title = '104 訓練發展管理師證書';
-            } else if (certId === 'cert-toeic') {
-                filename = 'TOEIC750.pdf';
-                title = 'TOEIC 成績單';
-            } else if (certId === 'cert-google') {
-                filename = 'google-digital-marketing.pdf';
-                title = 'Google 數位行銷證書';
-            } else if (certId === 'cert-gemini') {
-                filename = 'Gemini Certified Educator.pdf';
-                title = 'Gemini Certified Educator';
-            }
-
-            // Set Title
-            document.getElementById('modal-title').innerText = title;
-
-            // Show specific content & inject HTML
-            const targetContent = document.getElementById('cert-content-' + certId.replace('cert-', ''));
-            if(targetContent) {
-                targetContent.classList.remove('hidden');
-                targetContent.innerHTML = getPdfTemplate(filename);
-            }
-
-            // Show Modal
-            modal.classList.remove('hidden');
-            // Small delay to allow display:block to apply before opacity transition
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-            }, 10);
-            
-            // Prevent body scroll
-            document.body.style.overflow = 'hidden';
-        }
-
-        // CTA observer: add pulse when CTA comes into view to attract recruiter attention
-        (function watchCTA(){
-            const cta = document.getElementById('lets-cta');
-            if(!cta || !window.IntersectionObserver) return;
-            const io = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if(entry.isIntersecting) {
-                        cta.classList.add('cta-pulse');
-                        setTimeout(() => cta.classList.remove('cta-pulse'), 1400);
-                    }
-                });
-            }, { threshold: 0.6 });
-            io.observe(cta);
-            // gentle initial pulse after short delay to draw attention
-            setTimeout(()=>{ if(cta) { cta.classList.add('cta-pulse'); setTimeout(()=>cta.classList.remove('cta-pulse'),1400); } }, 1200);
-        })();
-
-        function closeCertModal() {
-            const modal = document.getElementById('cert-modal');
-            modal.classList.add('opacity-0');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.body.style.overflow = ''; // Restore scroll
-                // Clear content to stop iframes
-                document.querySelectorAll('.cert-content').forEach(el => el.innerHTML = '');
-            }, 300);
-        }
-
-        // Close on Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === "Escape") {
-                closeCertModal();
-            }
-        });
-
-        // Scroll Reveal Observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Only animate once
+                if (data.candidates && data.candidates[0].content) {
+                    const reply = data.candidates[0].content.parts[0].text;
+                    appendMessage('ai', reply);
+                } else {
+                    console.error('API Error:', data);
+                    appendMessage('ai', '抱歉，分析過程中發生錯誤，請稍後再試。');
                 }
-            });
-        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
-        
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Mobile Menu Logic
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
-        
-        function toggleMobileMenu() {
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-                setTimeout(() => {
-                    menu.classList.remove('scale-y-0', 'opacity-0');
-                }, 10);
-            } else {
-                menu.classList.add('scale-y-0', 'opacity-0');
-                setTimeout(() => {
-                    menu.classList.add('hidden');
-                }, 300);
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                document.getElementById(loadingId)?.remove();
+                appendMessage('ai', '連線失敗，請檢查網路或 API Key 設定。');
+            } finally {
+                isAnalyzing = false;
+                btnEl.disabled = false;
+                btnEl.innerHTML = '<i class="fas fa-paper-plane text-xs"></i>';
             }
         }
         
-        btn.addEventListener('click', toggleMobileMenu);
-
-        // View More Toggle Logic
-        function toggleSection(sectionId, btnTextId, btnIconId, count) {
-            const section = document.getElementById(sectionId);
-            const textEl = document.getElementById(btnTextId);
-            const iconEl = document.getElementById(btnIconId);
-            
-            if (section.classList.contains('hidden')) {
-                section.classList.remove('hidden');
-                // Trigger reflow
-                void section.offsetWidth;
-                section.classList.add('animate-fade-in');
-                textEl.textContent = 'View Less';
-                iconEl.classList.remove('fa-chevron-down');
-                iconEl.classList.add('fa-chevron-up');
-            } else {
-                section.classList.add('hidden');
-                section.classList.remove('animate-fade-in');
-                textEl.textContent = `View More (${count})`;
-                iconEl.classList.remove('fa-chevron-up');
-                iconEl.classList.add('fa-chevron-down');
+        // Allow Enter key to send
+        document.getElementById('jd-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                analyzeFit();
             }
-        }
-
-        function toggleAwards() {
-            toggleSection('more-awards', 'view-more-text', 'view-more-icon', '7');
-        }
-
-        function toggleResearch() {
-            toggleSection('more-research', 'view-research-text', 'view-research-icon', '1');
-        }
-
-        // Initialize view on load
-        window.addEventListener('load', () => {
-            // Set initial mode to 'featured'
-            switchExperienceMode('featured');
-
-            // Birth date is rendered as static text in the HTML for clarity and reliability.
         });
-
-
     </script>
-    <!-- Last Updated: 2025-12-21 17:40 - AI Removed -->
 </body>
 </html>
